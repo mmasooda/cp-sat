@@ -1,0 +1,776 @@
+{
+  "source_pdf": "S4100-1034.pdf",
+  "doc_id": "S4100-1034 Rev. 11 8/2024",
+  "title": "4100ES Addressable Fire Detection and Control — Emergency Voice/Alarm Communications Equipment",
+  "brand": "Simplex / Johnson Controls",
+  "compiled_at": "2025-11-15T18:39:03.286397Z",
+  "figures": [
+    {
+      "page": 1,
+      "figure": "Figure 1",
+      "caption": "4100ES Fire Alarm Control Panel with ES Touch Screen Display and Voice Options"
+    },
+    {
+      "page": 4,
+      "figure": "Figure 2",
+      "caption": "Audio Bay Reference with Single Channel Audio Control and Firefighter Telephone Modules"
+    }
+  ],
+  "tables": {
+    "Table 1 — Custom Message Ordering": [
+      {
+        "model": "4100-8804",
+        "description": "Select when Custom Messages are required",
+        "details": "Choose message types as required (min qty 1)"
+      },
+      {
+        "model": "4100-0822",
+        "description": "Custom Messages from Tape"
+      },
+      {
+        "model": "4100-0823",
+        "description": "Custom Messages from Transcript",
+        "note": "Send transcript in advance to Applications Engineering to verify phrase quantity"
+      },
+      {
+        "model": "4100-0824",
+        "description": "Custom Messages from Archive",
+        "ordering": "Order (1) 4100-082x per (2) complete messages (no spliced phrases) or per (50) spliced phrases"
+      },
+      {
+        "model": "UCSET1393",
+        "description": "CO Relocation Message",
+        "details": "Temporal 4 horn + English male voice instruction"
+      }
+    ],
+    "Table 2 — Analog EVAC Equipment (Constant Supervision Compatible)": [
+      {
+        "model": "4100-9620",
+        "description": "Basic Analog Audio Operation with microphone; requires dedicated expansion bay",
+        "includes": "Expansion Bay, 4100-1210 Analog Controller Board, Microphone Module, Audio Expansion Bay Kit"
+      },
+      {
+        "model": "4100-1210",
+        "description": "Analog Controller Board",
+        "mounting": "Controller mounts in Blocks A and B; order bay & kit separately"
+      },
+      {
+        "model": "4100-1361",
+        "description": "Flex-35, 35 W Amplifier; 25 VRMS output",
+        "nac_rating": "0.5 A",
+        "speaker_cap": "35 W or 100 speakers max",
+        "note": "Includes three Class B audio NACs; power from ES-PS"
+      },
+      {
+        "model": "4100-1362",
+        "description": "Flex-35, 35 W Amplifier; 70.7 VRMS output",
+        "nac_rating": "0.5 A",
+        "speaker_cap": "35 W or 100 speakers max"
+      },
+      {
+        "model": "4100-1312",
+        "description": "Flex-50, 50 W Amplifier; 25 VRMS output",
+        "nac_rating": "0.707 A",
+        "speaker_cap": "50 W or 100 speakers max"
+      },
+      {
+        "model": "4100-1313",
+        "description": "Flex-50, 50 W Amplifier; 70.7 VRMS output",
+        "nac_rating": "0.707 A",
+        "speaker_cap": "50 W or 100 speakers max"
+      }
+    ],
+    "Table 3 — 100 W Analog Amplifiers with Power Supply (Constant Supervision Compatible)": [
+      {
+        "model_25v": "4100-1314",
+        "model_70v": "4100-1315",
+        "input": "120 VAC, 60 Hz",
+        "listing": "UL",
+        "type": "Primary 100 W Amplifier",
+        "details": "Six Class B audio NACs; NAC rating: 2 A @ 25 VRMS (50 W); 1.414 A @ 70.7 VRMS (100 W); 100 speakers max"
+      },
+      {
+        "model_25v": "4100-1316",
+        "model_70v": "4100-1317",
+        "input": "120 VAC, 60 Hz",
+        "listing": "ULC",
+        "type": "Primary 100 W Amplifier",
+        "details": "As above; ULC version"
+      },
+      {
+        "model_25v": "4100-1318",
+        "model_70v": "4100-1319",
+        "input": "220/230/240 VAC, 50/60 Hz",
+        "listing": "UL",
+        "type": "Primary 100 W Amplifier",
+        "details": "As above"
+      },
+      {
+        "model_25v": "4100-1320",
+        "model_70v": "4100-1321",
+        "input": "120 VAC, 60 Hz",
+        "listing": "UL",
+        "type": "Backup 100 W Amplifier",
+        "details": "Uses six Class B NACs of primary amplifier"
+      },
+      {
+        "model_25v": "4100-1322",
+        "model_70v": "4100-1323",
+        "input": "120 VAC, 60 Hz",
+        "listing": "ULC",
+        "type": "Backup 100 W Amplifier",
+        "details": "Uses six Class B NACs of primary amplifier"
+      },
+      {
+        "model_25v": "4100-1324",
+        "model_70v": "4100-1325",
+        "input": "220/230/240 VAC, 50/60 Hz",
+        "listing": "UL",
+        "type": "Backup 100 W Amplifier",
+        "details": "Uses six Class B NACs of primary amplifier"
+      }
+    ],
+    "Table 4 — Digital EVAC Equipment (Constant Supervision Compatible)": [
+      {
+        "model": "4100-9621",
+        "description": "Basic Digital Audio Operation with microphone; dedicated expansion bay",
+        "includes": "Expansion Bay, 4100-1311 Digital Controller Board, Microphone Module, Audio Expansion Bay Kit"
+      },
+      {
+        "model": "4100-1412",
+        "description": "ES Net basic audio with microphone; dedicated expansion bay",
+        "includes": "Expansion bay, 4100-1411 controller, microphone module, Ethernet cable, audio expansion bay kit"
+      },
+      {
+        "model": "4100-1311",
+        "description": "Eight Channel Digital Controller Board",
+        "mounting": "Blocks A and B; order bay & kit separately"
+      },
+      {
+        "model": "4100-1411",
+        "description": "ES Net eight-channel digital controller board",
+        "memory": "32 minute message memory; no expansion required"
+      },
+      {
+        "model": "4100-1363",
+        "description": "Flex-35, 35 W Amplifier; 25 VRMS output",
+        "nac_rating": "0.5 A",
+        "speaker_cap": "35 W or 100 speakers max"
+      },
+      {
+        "model": "4100-1364",
+        "description": "Flex-35, 35 W Amplifier; 70.7 VRMS output",
+        "nac_rating": "0.5 A",
+        "speaker_cap": "35 W or 100 speakers max"
+      },
+      {
+        "model": "4100-1326",
+        "description": "Flex-50, 50 W Amplifier; 25 VRMS output",
+        "nac_rating": "0.707 A",
+        "speaker_cap": "50 W or 100 speakers max"
+      },
+      {
+        "model": "4100-1327",
+        "description": "Flex-50, 50 W Amplifier; 70.7 VRMS output",
+        "nac_rating": "0.707 A",
+        "speaker_cap": "50 W or 100 speakers max"
+      }
+    ],
+    "Table 5 — 100 W Digital Amplifiers with Power Supply (Constant Supervision Compatible)": [
+      {
+        "model_25v": "4100-1328",
+        "model_70v": "4100-1329",
+        "input": "120 VAC, 60 Hz",
+        "listing": "UL",
+        "type": "Primary 100 W Amplifier",
+        "details": "Six Class B audio NACs; 2 A @ 25 VRMS (50 W); 1.414 A @ 70.7 VRMS (100 W); 100 speakers max"
+      },
+      {
+        "model_25v": "4100-1330",
+        "model_70v": "4100-1331",
+        "input": "120 VAC, 60 Hz",
+        "listing": "ULC",
+        "type": "Primary 100 W Amplifier",
+        "details": "As above; ULC version"
+      },
+      {
+        "model_25v": "4100-1332",
+        "model_70v": "4100-1333",
+        "input": "220/230/240 VAC, 50/60 Hz",
+        "listing": "UL",
+        "type": "Primary 100 W Amplifier",
+        "details": "As above"
+      },
+      {
+        "model_25v": "4100-1334",
+        "model_70v": "4100-1335",
+        "input": "120 VAC, 60 Hz",
+        "listing": "UL",
+        "type": "Backup 100 W Amplifier",
+        "details": "Uses six Class B NACs of primary amplifier"
+      },
+      {
+        "model_25v": "4100-1336",
+        "model_70v": "4100-1337",
+        "input": "120 VAC, 60 Hz",
+        "listing": "ULC",
+        "type": "Backup 100 W Amplifier",
+        "details": "Uses six Class B NACs of primary amplifier"
+      },
+      {
+        "model_25v": "4100-1338",
+        "model_70v": "4100-1339",
+        "input": "220/230/240 VAC, 50/60 Hz",
+        "listing": "UL",
+        "type": "Backup 100 W Amplifier",
+        "details": "Uses six Class B NACs of primary amplifier"
+      }
+    ],
+    "Table 6 — Amplifier and Related Audio Options": [
+      {
+        "model": "4100-1245",
+        "description": "Flex-35/50 Expansion NAC Module; adds three Class B audio NACs",
+        "mounting": "Mounts on Flex-35/50",
+        "ratings": "NAC 1.5 A, 35/50 W, or 100 speakers max",
+        "current": {
+          "supv": "8.4 mA",
+          "alarm": "60 mA"
+        }
+      },
+      {
+        "model": "4100-1246",
+        "description": "Flex-35/50 Class A Adapter Module; converts three onboard NACs to Class A",
+        "mounting": "Mounts on Flex-35/50",
+        "ratings": "2 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "1 mA",
+          "alarm": "30 mA"
+        }
+      },
+      {
+        "model": "4100-1248",
+        "description": "100 W Amplifier Expansion NAC Module; provides six additional Class B audio NACs",
+        "mounting": "Mounts on 100 W amplifier",
+        "ratings": "1.5 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "17 mA",
+          "alarm": "60 mA"
+        }
+      },
+      {
+        "model": "4100-1249",
+        "description": "100 W Class A Adapter Module; converts six onboard NACs to Class A",
+        "mounting": "Mounts on 100 W amplifier",
+        "ratings": "2 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "1 mA",
+          "alarm": "60 mA"
+        }
+      },
+      {
+        "model": "4100-1259",
+        "description": "Constant Supervision Adapter (25 VRMS) for three NACs",
+        "ratings": "NAC 2 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "10 mA on batteries",
+          "alarm": "35 mA"
+        }
+      },
+      {
+        "model": "4100-1260",
+        "description": "Constant Supervision Adapter (70.7 VRMS) for three NACs",
+        "ratings": "NAC 0.707 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "38 mA",
+          "alarm": "70 mA"
+        }
+      },
+      {
+        "model": "4100-5116",
+        "description": "Expansion Signal Module; converts one NAC input to three NAC outputs; selects between two inputs (Flex-35/50 only)",
+        "ratings": "1.5 A Class B NACs; up to five per amplifier",
+        "current": {
+          "supv": "20 mA",
+          "alarm": "80 mA"
+        }
+      },
+      {
+        "model": "4100-1266",
+        "description": "Expansion Signal Module NAC Expander",
+        "ratings": "1.5 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "0.84 mA",
+          "alarm": "60 mA"
+        }
+      },
+      {
+        "model": "4100-1267",
+        "description": "Expansion Signal Module Class A Adapter; converts 3 Class B NACs to Class A",
+        "ratings": "1.5 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "1 mA",
+          "alarm": "30 mA"
+        }
+      },
+      {
+        "model": "4100-1268",
+        "description": "Expansion Signal Module Constant Supervision Adapter (25 or 70.7 VRMS); converts 3 Class B NACs to Class B or A Constant Supervision NACs",
+        "ratings": "1.4 A, 50 W, or 100 speakers max",
+        "current": {
+          "supv": "38 mA on batteries (CS deactivated)",
+          "alarm": "70 mA"
+        }
+      },
+      {
+        "model": "4081-9018",
+        "description": "End-of-line resistor harness for 70.7 VRMS NACs",
+        "details": "10 kΩ, 1 W"
+      },
+      {
+        "model": "4100-2300",
+        "description": "Expansion Bay Hardware",
+        "details": "Order one for each expansion bay"
+      },
+      {
+        "model": "4100-2320",
+        "description": "Audio Bay-to-Bay Interconnection Harness Kit"
+      },
+      {
+        "model": "4100-0637",
+        "description": "Audio Box Interconnection Harness Kit",
+        "details": "Order one for each close-nippled audio cabinet"
+      }
+    ],
+    "Table 7 — Audio Input and Controller Options": [
+      {
+        "model": "4100-1240",
+        "description": "Auxiliary Audio Input Module; four unsupervised inputs per module; 2 max",
+        "inputs": "10 VRMS, 25 VRMS, 70.7 VRMS, line level (0.707 VRMS), or microphone",
+        "size": "1 Block",
+        "current": "10 mA"
+      },
+      {
+        "model": "4100-1241",
+        "description": "8 Minute Message Expansion Module",
+        "capacity": "8 min normal / 4 min high res",
+        "current": {
+          "supv": "2 mA",
+          "active": "17 mA"
+        }
+      },
+      {
+        "model": "4100-1242",
+        "description": "32 Minute Message Expansion Module",
+        "capacity": "32 min normal / 16 min high res",
+        "current": {
+          "supv": "2 mA",
+          "active": "17 mA"
+        }
+      }
+    ],
+    "Table 8 — Operator Interface and Related Options": [
+      {
+        "model": "4100-1243",
+        "description": "Microphone Module (FACP)",
+        "mounting": "Front panel; two Slots (4\"); expansion bay only; space behind for flat modules only"
+      },
+      {
+        "model": "4100-1244",
+        "description": "Remote Microphone Module (Remote Annunciator)",
+        "mounting": "Front panel; two Slots (4\"); expansion bay only; space behind flat modules only; distance ≤ 4000 ft (1219 m)",
+        "current": {
+          "supv": "2.4 mA",
+          "active": "6 mA"
+        }
+      },
+      {
+        "model": "4003-9803",
+        "description": "Remote Microphone Module",
+        "mounting": "2-gang box; see S4100-0053"
+      },
+      {
+        "model": "4100-1252/1253/1254/1255",
+        "description": "Operator Interface LED/Switch Modules (1, 1.5, 2, or 3–8 channel options)",
+        "notes": "Single Slot modules; connect to 4100-1288/1289 controller in same bay; 24 mA; add adjacent modules as required (see S4100-0032)"
+      },
+      {
+        "model": "4100-1288",
+        "description": "64 LED/64 Switch Controller Module with mounting plate",
+        "mounting": "Mounts behind LED/switch modules; provisions for one 4100-1289"
+      },
+      {
+        "model": "4100-1289",
+        "description": "64 LED/64 Switch Controller Module without mounting plate",
+        "notes": "Mounts on extra space of 4100-1288; must be in same bay as controlled modules"
+      }
+    ],
+    "Table 9 — Firefighter Telephone System Products": [
+      {
+        "model": "4100-1270",
+        "description": "Master Telephone with Control Module; three Class B telephone NACs; one max per audio system; includes one 4100-1272",
+        "mounting": "Front panel; space behind for flat modules only",
+        "current": {
+          "supv": "80 mA",
+          "in_use": "140 mA + remote phones"
+        }
+      },
+      {
+        "model": "4100-1271",
+        "description": "Remote Master Telephone",
+        "mounting": "Remote Annunciator Panel only (see S4100-0038)"
+      },
+      {
+        "model": "4100-1272",
+        "description": "Expansion Telephone Control Module; three Class B telephone NACs",
+        "current": {
+          "supv": "80 mA",
+          "in_use": "140 mA + remote phones"
+        }
+      },
+      {
+        "model": "4100-1273",
+        "description": "Telephone NAC Class A Adapter Module",
+        "mounting": "Mounts to 4100-1270 or 4100-1272; no additional current"
+      }
+    ],
+    "Table 10 — Network and MINIPLEX Transponder Audio Connection Options": [
+      {
+        "model": "4100-0623",
+        "description": "Network Audio Riser Controller Module (analog or digital)",
+        "mounting": "Block A",
+        "current": "14 mA"
+      },
+      {
+        "model": "4100-0621",
+        "description": "Dual Channel Analog Audio Riser Module",
+        "details": "Accepts two audio signals from host; controlled by Transponder Interface Module",
+        "current": "25 mA (active)"
+      },
+      {
+        "model": "4100-0622",
+        "description": "3–8 Channel Digital Audio Riser Module with NAA input",
+        "details": "Up to eight audio channels; NAA input for 25, 70.7, or 0.707 VRMS",
+        "current": "70 mA"
+      },
+      {
+        "model": "4100-1341",
+        "description": "MCC Digital Audio Riser Interface",
+        "details": "Selects a digital audio channel and converts to analog line level for input to analog voice panel",
+        "current": "70 mA",
+        "mounting": "Block B; 4100-9854 legacy bay kit available"
+      },
+      {
+        "model": "4100-9854",
+        "description": "4100/4100+ Legacy bay mounting kit"
+      },
+      {
+        "model": "4100-1258",
+        "description": "NPU to 4100ES Audio Interconnect Module",
+        "mounting": "Mounts in 4100ES Audio cabinet",
+        "details": "Dual terminal block module; requires 1 Block"
+      }
+    ],
+    "Table 11 — Master Telephone Control Current": [
+      {
+        "remote_phones": 0,
+        "current_mA": 140
+      },
+      {
+        "remote_phones": 1,
+        "current_mA": 180
+      },
+      {
+        "remote_phones": 2,
+        "current_mA": 220
+      },
+      {
+        "remote_phones": 3,
+        "current_mA": 250
+      },
+      {
+        "remote_phones": 4,
+        "current_mA": 276
+      },
+      {
+        "remote_phones": 5,
+        "current_mA": 304
+      },
+      {
+        "remote_phones": 6,
+        "current_mA": 329
+      }
+    ],
+    "Table 12 — Expansion Bay Module Loading Reference": [
+      {
+        "description": "Audio Controller Modules",
+        "mounting": "Blocks A and B"
+      },
+      {
+        "description": "Network Riser Controller Module",
+        "mounting": "Block A"
+      },
+      {
+        "description": "Audio Riser Modules",
+        "mounting": "Block B"
+      },
+      {
+        "description": "Flex-35 Amplifiers, 2 max/bay*",
+        "mounting": "Blocks E & F; C & D; or A & B"
+      },
+      {
+        "description": "Flex-50 Amplifiers, 2 max/bay*",
+        "mounting": "Blocks E & F or C & D"
+      },
+      {
+        "description": "100 W Amplifiers, 1 max/bay",
+        "mounting": "Blocks E, F, G and H"
+      },
+      {
+        "description": "100 W Backup Amplifiers, 1 max per bay with primary",
+        "mounting": "Blocks A, B, C and D"
+      },
+      {
+        "description": "Master or Remote Phone Module",
+        "mounting": "Blocks A and B"
+      },
+      {
+        "description": "Master or Remote Microphone Module",
+        "mounting": "Two vertical Blocks, any location (except next to telephone)"
+      },
+      {
+        "description": "Telephone Module",
+        "mounting": "1 Block"
+      },
+      {
+        "description": "Expansion Signal Module",
+        "mounting": "1 Block"
+      },
+      {
+        "description": "Operator LED/Switch Modules",
+        "mounting": "1 Slot"
+      },
+      {
+        "description": "ES-PS",
+        "mounting": "Blocks G and H with one flex amp; Blocks C and D with two flex amps"
+      },
+      {
+        "description": "ES-PS configured as backup",
+        "mounting": "Blocks E and F ONLY"
+      },
+      {
+        "note": "* When mounting dual Flex amplifiers on an expansion bay, special mounting rules apply."
+      }
+    ],
+    "Table 13 — ES Power Supply Specifications (ES-PS and ES-XPS)": [
+      {
+        "spec": "AC Input Power",
+        "rating": "120–240 VAC; 120 VAC 3.72 A; 220–240 VAC 1.82 A"
+      },
+      {
+        "spec": "Total DC Output Power Capacity — Without Fan",
+        "rating": "9.5 A"
+      },
+      {
+        "spec": "Total DC Output Power Capacity — With 4100-5130 Fan and 4100-5451 IDNAC",
+        "rating": "9.7 A"
+      },
+      {
+        "spec": "Total DC Output Power Capacity — With 4100-5130 Fan (no 4100-5451)",
+        "rating": "12.7 A"
+      },
+      {
+        "spec": "With Regulated 24V Appliance Loads",
+        "rating": "5.0 A"
+      },
+      {
+        "spec": "Special Application Appliance Loads",
+        "rating": "Fully supports preceding total DC output ratings (Simplex horns/strobes etc.)"
+      },
+      {
+        "spec": "Regulated 24V Appliances",
+        "rating": "Reduces total DC output power capacity to 5.0 A"
+      },
+      {
+        "spec": "Auxiliary Power Tap",
+        "rating": "2 A max (from total)"
+      },
+      {
+        "spec": "NACs Programmed for Auxiliary Power",
+        "rating": "3 A max per NAC; 5 A total (from total)"
+      },
+      {
+        "spec": "Battery Charger (ES-PS only)",
+        "rating": "Sealed Lead-Acid; up to 110 Ah (remote cabinet if >50 Ah)"
+      },
+      {
+        "spec": "Charger Performance",
+        "rating": "Temp. compensated, dual rate; recharges within 48 h per UL/ULC 864"
+      },
+      {
+        "spec": "Operating Temperature",
+        "rating": "32°F to 120°F (0°C to 49°C)"
+      },
+      {
+        "spec": "Operating Humidity",
+        "rating": "≤93% RH, non-condensing @ 90°F (32°C)"
+      },
+      {
+        "spec": "Option Card Mounting",
+        "rating": "Two vertical blocks available for compatible modules (see 579-1288)"
+      },
+      {
+        "notes": [
+          "Battery charger available on ES-PS only",
+          "When ES-PS powers Flex-35/50 amplifiers the ES-PS battery charger is not available"
+        ]
+      }
+    ],
+    "Table 14 — Amplifier Ratings": [
+      {
+        "spec": "Built-in Tones",
+        "rating": "500 Hz temporal horn tone when amplifiers separated from audio controller"
+      },
+      {
+        "group": "Flex-35 Amplifiers (4100-1361, -1362, -1363, -1364)",
+        "input_voltage": "19–35 VDC from adjacent PS",
+        "currents": {
+          "supervisory": "425 mA (power stage supervised); 85 mA low power mode",
+          "horn_continuous": "5.5 A (use for PS loading)",
+          "alarm_avg": "1.64 A avg with temporal horn (use for battery backup)"
+        }
+      },
+      {
+        "group": "Flex-50 Amplifiers (4100-1312, -1313, -1326, -1327)",
+        "input_voltage": "19–35 VDC from adjacent PS",
+        "currents": {
+          "supervisory": "425 mA (power stage supervised); 85 mA low power mode",
+          "horn_continuous": "5.55 A (use for PS loading)",
+          "alarm_avg": "2.27 A avg with temporal horn (use for battery backup)"
+        }
+      },
+      {
+        "group": "100 W Amplifiers and Backup Amplifiers",
+        "input_power": {
+          "120VAC": "4 A max @ 102–132 VAC, 60 Hz",
+          "220-240VAC": "2 A max @ 204–264 VAC, taps for 220/230/240"
+        },
+        "currents": {
+          "supervisory": "400 mA (analog); 220 mA (digital) with power stage supervised; 85 mA low power",
+          "horn_continuous": "9.6 A",
+          "alarm_avg": "3.8 A avg with temporal horn (use for battery backup)"
+        },
+        "total_power_per_cabinet": "300 W maximum"
+      }
+    ],
+    "Table 15 — Audio Controller Ratings": [
+      {
+        "models": [
+          "4100-9620",
+          "4100-1210"
+        ],
+        "type": "Analog",
+        "supervisory_current": "225 mA",
+        "add_local_speaker_alarm": {
+          "min": "75 mA",
+          "half": "190 mA",
+          "full": "333 mA"
+        },
+        "microphone_current": {
+          "supv": "2.4 mA",
+          "active": "30 mA"
+        }
+      },
+      {
+        "models": [
+          "4100-9621",
+          "4100-1311"
+        ],
+        "type": "Digital",
+        "supervisory_current": "85 mA",
+        "add_local_speaker_alarm": {
+          "min": "75 mA",
+          "half": "190 mA",
+          "full": "333 mA"
+        },
+        "microphone_current": {
+          "supv": "2.4 mA",
+          "active": "30 mA"
+        }
+      },
+      {
+        "models": [
+          "4100-1411",
+          "4100-1412"
+        ],
+        "type": "ES Net",
+        "supervisory_current": "125 mA",
+        "add_local_speaker_alarm": {
+          "min": "60 mA",
+          "half": "160 mA",
+          "full": "250 mA"
+        },
+        "microphone_current": {
+          "supv": "2.4 mA",
+          "active": "20 mA"
+        }
+      },
+      {
+        "analog_riser_distance": "Up to 10,000 ft (3048 m) total with 18 AWG STP"
+      },
+      {
+        "digital_riser_distance": "Up to 2500 ft (762 m) between nodes; runs >100 ft require UTP; ≤100 ft require STP",
+        "reference": "Install Instr. 574-844"
+      }
+    ],
+    "Table 16 — Firefighter Telephone Distance Ratings": [
+      {
+        "spec": "Distance",
+        "rating": "7500 ft (2286 m) to farthest phone; 18 AWG STP"
+      }
+    ],
+    "Table 17 — Environmental and Installation Instruction Reference": [
+      {
+        "spec": "Operating Temperature Range",
+        "rating": "32°F to 120°F (0°C to 49°C)"
+      },
+      {
+        "spec": "Operating Humidity Range",
+        "rating": "Up to 93% RH, non-condensing at 90°F (32°C) maximum"
+      },
+      {
+        "install_instructions": {
+          "Flex Amplifiers": "579-173",
+          "Digital/Analog Amplifiers": "579-174",
+          "Constant Supervision NAC Modules": "579-515",
+          "Firefighter Phones": "579-226"
+        }
+      }
+    ],
+    "Table 18 — Additional 4100ES Data Sheet Reference": [
+      {
+        "subject": "Battery and Battery Cabinet Reference for 4100ES",
+        "datasheet": "S2081-0006"
+      },
+      {
+        "subject": "110 Ah Batteries and Cabinets for 4100ES",
+        "datasheet": "S2081-0012"
+      },
+      {
+        "subject": "4100ES Basic Panels with ES-PS Power Supplies",
+        "datasheet": "S4100-1031"
+      },
+      {
+        "subject": "NDU with ES-PS Power Supplies for 4120 Network",
+        "datasheet": "S4100-1036"
+      },
+      {
+        "subject": "4100ES Remote Annunciator Panels",
+        "datasheet": "S4100-1039"
+      },
+      {
+        "subject": "NDU with ES-PS Power Supplies for ES Net",
+        "datasheet": "S4100-1077"
+      }
+    ]
+  }
+}

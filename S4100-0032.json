@@ -1,0 +1,411 @@
+{
+  "source_pdf": "4100-0032.pdf",
+  "doc_id": "S4100-0032-13 8/2018",
+  "title": "4100ES Fire Control Panels — Panel Mounted LED/Switch & LED Modules, LED/Switch Controllers, Panel Mounted Printer",
+  "brand": "Simplex / Tyco Fire Protection Products",
+  "compiled_at": "2025-11-15T18:34:06.383769Z",
+  "figures": [
+    {
+      "page": 1,
+      "caption": "4100ES 2‑Bay Fire Alarm Control Panel with sample of available LED/Switch modules"
+    },
+    {
+      "page": 2,
+      "caption": "LED/Switch Module detail reference: 8/16 switch variants, LED color legends, pluggable LED modules"
+    },
+    {
+      "page": 3,
+      "caption": "HOA (Hand‑Off‑Auto) and 24/24 LED/Switch module detail reference"
+    },
+    {
+      "page": 6,
+      "caption": "Panel‑mounted thermal printer (4100‑1293) layout and indicators"
+    }
+  ],
+  "tables": {
+    "LED/Switch Modules — General Purpose": [
+      {
+        "model": "4100-1280",
+        "leds_per_switch": "One",
+        "led_colors": "Red",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 8,
+        "switch_qty": 8
+      },
+      {
+        "model": "4100-1281",
+        "leds_per_switch": "One",
+        "led_colors": "Yellow",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 8,
+        "switch_qty": 8
+      },
+      {
+        "model": "4100-1282",
+        "leds_per_switch": "Two",
+        "led_colors": "Red on top, Yellow on bottom",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 16,
+        "switch_qty": 8
+      },
+      {
+        "model": "4100-1283",
+        "leds_per_switch": "Two",
+        "led_colors": "Yellow on top and bottom",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 16,
+        "switch_qty": 8
+      },
+      {
+        "model": "4100-1284",
+        "leds_per_switch": "Two",
+        "led_colors": "Red on top, Green on bottom",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 16,
+        "switch_qty": 8
+      },
+      {
+        "model": "4100-1296",
+        "leds_per_switch": "Two",
+        "led_colors": "Green on top, Yellow on bottom",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 16,
+        "switch_qty": 8
+      },
+      {
+        "model": "4100-1285",
+        "leds_per_switch": "One",
+        "led_colors": "Red",
+        "custom_label_area": "One per column of 8 LED/switch pairs",
+        "led_qty": 16,
+        "switch_qty": 16
+      },
+      {
+        "model": "4100-1278",
+        "leds_per_switch": "One",
+        "led_colors": "8 Red (left), 8 Yellow (right)",
+        "custom_label_area": "One per column of 8 LED/switch pairs",
+        "led_qty": 16,
+        "switch_qty": 16
+      },
+      {
+        "model": "4100-1300",
+        "leds_per_switch": "One",
+        "led_colors": "Red on top, Yellow on bottom (pluggable LEDs)",
+        "custom_label_area": "Per module and per LED/switch pair",
+        "led_qty": 16,
+        "switch_qty": 16,
+        "notes": "UL/ULC/CSFM listed only"
+      },
+      {
+        "model": "4100-1287",
+        "leds_per_switch": "One",
+        "led_colors": "Red",
+        "custom_label_area": "Per module and per switch",
+        "led_qty": 24,
+        "switch_qty": 24
+      }
+    ],
+    "LED Only Modules": [
+      {
+        "model": "4100-1276",
+        "description": "8‑LED module with Red LEDs; pluggable; custom label per module and per LED",
+        "led_qty": 8,
+        "pluggable": true
+      },
+      {
+        "model": "4100-1277",
+        "description": "16‑LED module; Red top / Yellow bottom; pluggable; custom label per module and per LED pair",
+        "led_qty": 16,
+        "pluggable": true
+      }
+    ],
+    "LED Color Kits (for pluggable LED modules)": [
+      {
+        "model": "4100-9843",
+        "description": "LED Kit — Yellow (8 per kit)"
+      },
+      {
+        "model": "4100-9844",
+        "description": "LED Kit — Green (8 per kit)"
+      },
+      {
+        "model": "4100-9845",
+        "description": "LED Kit — Red (8 per kit)"
+      },
+      {
+        "model": "4100-9855",
+        "description": "LED Kit — Blue (8 per kit); typically for ancillary status per ULC S527"
+      }
+    ],
+    "HOA Modules — G/R/G LEDs": [
+      {
+        "model": "4100-1286",
+        "operation": "Eight HOA controls with labeled switches",
+        "switch_functions": {
+          "top": "On (Hand)",
+          "middle": "Off",
+          "bottom": "Auto"
+        },
+        "leds": {
+          "top": "Green",
+          "middle": "Red",
+          "bottom": "Green"
+        }
+      },
+      {
+        "model": "4100-1295",
+        "operation": "Eight HOA controls with unlabeled switches",
+        "switch_functions": {
+          "top": "On (Hand)",
+          "middle": "Off",
+          "bottom": "Auto"
+        },
+        "leds": {
+          "top": "Green",
+          "middle": "Red",
+          "bottom": "Green"
+        }
+      }
+    ],
+    "HOA Modules — G/R/W LEDs (IBC)": [
+      {
+        "model": "4100-1275",
+        "operation": "Eight HOA controls with labeled switches; LED colors meet IBC",
+        "switch_functions": {
+          "top": "On (Hand)",
+          "middle": "Off",
+          "bottom": "Auto"
+        },
+        "leds": {
+          "top": "Green",
+          "middle": "Red",
+          "bottom": "White"
+        }
+      },
+      {
+        "model": "4100-1299",
+        "operation": "Eight HOA controls with unlabeled switches; LED colors meet IBC",
+        "switch_functions": {
+          "top": "On (Hand)",
+          "middle": "Off",
+          "bottom": "Auto"
+        },
+        "leds": {
+          "top": "Green",
+          "middle": "Red",
+          "bottom": "White"
+        }
+      }
+    ],
+    "HOA Modules — G/Y/G LEDs": [
+      {
+        "model": "4100-1302",
+        "operation": "Eight HOA controls with labeled switches; for applications requiring no red LEDs",
+        "switch_functions": {
+          "top": "On (Hand)",
+          "middle": "Off",
+          "bottom": "Auto"
+        },
+        "leds": {
+          "top": "Green",
+          "middle": "Yellow",
+          "bottom": "Green"
+        },
+        "notes": "UL/ULC/CSFM listed only"
+      },
+      {
+        "model": "4100-1301",
+        "operation": "Eight HOA controls with unlabeled switches; no red LEDs",
+        "switch_functions": {
+          "top": "On (Hand)",
+          "middle": "Off",
+          "bottom": "Auto"
+        },
+        "leds": {
+          "top": "Green",
+          "middle": "Yellow",
+          "bottom": "Green"
+        },
+        "notes": "UL/ULC/CSFM listed only"
+      }
+    ],
+    "LED/Switch Controllers & Accessories": [
+      {
+        "model": "4100-1288",
+        "description": "64‑LED/64‑Switch controller with mounting plate; mounts behind modules; provisions for 4100‑1289",
+        "notes": "Controllers and controlled modules must be in the same bay"
+      },
+      {
+        "model": "4100-1289",
+        "description": "64‑LED/64‑Switch controller without mounting plate; mounts on extra space of 4100‑1288"
+      },
+      {
+        "model": "4100-0636",
+        "description": "Harness Kit — Power and Communications"
+      },
+      {
+        "model": "4100-0641",
+        "description": "Harness Kit — 26‑position Flex Cable, 14‑1/2 in (368 mm)"
+      },
+      {
+        "model": "4100-1290",
+        "description": "24‑Point I/O Module for external connections; each point selectable as input or output; 2 in (51 mm) wide; 1 slot"
+      },
+      {
+        "model": "4100-1294",
+        "description": "LED/Switch Module Slide‑in Labels; order one per cabinet when LED/switch or LED‑only modules are present"
+      },
+      {
+        "model": "4100-1279",
+        "description": "Single blank 2‑in display cover; two maximum in a row between LED/switch modules"
+      }
+    ],
+    "Panel Mounted Printer — Models": [
+      {
+        "model": "4100-1293",
+        "description": "Panel‑mount thermal printhead printer; supplied with one roll of paper"
+      },
+      {
+        "model": "4190-9803",
+        "description": "Replacement thermal paper roll for 4100‑1293"
+      }
+    ],
+    "Panel Mounted Printer — Electrical & Communications": [
+      {
+        "spec": "Input Voltage",
+        "value": "19 to 33 VDC, from control panel"
+      },
+      {
+        "spec": "Current (Standby)",
+        "value": "125 mA @ 24 VDC"
+      },
+      {
+        "spec": "Current (Printing)",
+        "value": "800 mA @ 24 VDC"
+      },
+      {
+        "spec": "Communications",
+        "value": "RS‑232, 9600 baud, from control panel RS‑232 module"
+      }
+    ],
+    "Panel Mounted Printer — Print Characteristics": [
+      {
+        "spec": "Print Format",
+        "value": "Fixed thermal printhead; black characters"
+      },
+      {
+        "spec": "Characters",
+        "value": "11 x 28 dot matrix; alarm info printed in bold"
+      },
+      {
+        "spec": "Paper Format",
+        "value": "40 columns; 6 lines per inch; 20 lines visible; wound to top take‑up reel"
+      },
+      {
+        "spec": "Paper Speed",
+        "value": "1.33 in/sec max"
+      },
+      {
+        "spec": "Print Speed",
+        "value": "312 cps"
+      },
+      {
+        "spec": "Sound Output",
+        "value": "55 dB max (door open)"
+      }
+    ],
+    "Panel Mounted Printer — Paper": [
+      {
+        "spec": "Type/Size",
+        "value": "Thermal; 2.35 in wide, 160 ft long (60 mm x 49 m)"
+      },
+      {
+        "spec": "Replacement Paper",
+        "value": "4190-9803 (1 roll)"
+      }
+    ],
+    "Panel Mounted Printer — Mounting": [
+      {
+        "spec": "Bay Location Reference",
+        "value": "Requires 3 expansion bay slots; location as required"
+      },
+      {
+        "spec": "Clearance Behind Printer",
+        "value": "Accepts low‑profile 4100ES/4100U modules only"
+      }
+    ],
+    "Environmental Specifications": [
+      {
+        "spec": "Operating Temperature Range",
+        "value": "32° to 120°F (0° to 49°C)"
+      },
+      {
+        "spec": "Operating Humidity Range",
+        "value": "Up to 93% RH, non‑condensing @ 90°F (32°C) max"
+      }
+    ],
+    "64 LED/64 Switch Controller — Electrical": [
+      {
+        "spec": "Input Voltage",
+        "value": "19 to 33 VDC"
+      },
+      {
+        "spec": "Current (No LEDs On)",
+        "value": "20 mA @ 24 VDC"
+      },
+      {
+        "spec": "Current (All 64 LEDs On)",
+        "value": "180 mA nominal @ 24 VDC (2.5 mA/LED); 212 mA max @ 19 VDC (3.0 mA/LED)"
+      },
+      {
+        "spec": "Controllers per Bay",
+        "value": "Maximum two per bay; control only modules in same bay"
+      },
+      {
+        "spec": "Bay Location",
+        "value": "Slots 1 & 2 or 3 & 4; mounts to back of modules"
+      },
+      {
+        "spec": "Clearance",
+        "value": "Accepts low profile 4100ES/4100U modules only"
+      }
+    ],
+    "24-Point I/O Module (4100-1290) — Electrical": [
+      {
+        "spec": "Supervisory Current",
+        "value": "34 mA"
+      },
+      {
+        "spec": "Alarm Current",
+        "value": "75 mA (add outputs separately)"
+      },
+      {
+        "spec": "Switch Inputs",
+        "value": "Momentary or maintained, 2 or 3 position; max distance 2500 ft (762 m) or 65 Ω"
+      },
+      {
+        "spec": "Output Current",
+        "value": "150 mA @ 24 VDC per point; inrush limited for incandescent bulbs"
+      },
+      {
+        "spec": "Output Wiring",
+        "value": "Diode suppress relay coils; max distance 600 ft (183 m) or 2 Ω"
+      }
+    ]
+  },
+  "listings": [
+    "UL 864 (UOJZ) & Smoke Control (UUKL)",
+    "UL 2017 (QVAX)",
+    "UL 1076 (APOU)",
+    "UL 1730 (UULH)",
+    "ULC S527-99",
+    "CSFM 7165-0026:251"
+  ],
+  "features_summary": [
+    "Front‑bay mounted LED/switch and LED‑only modules with high‑intensity LEDs and tactile momentary buttons",
+    "64‑LED/64‑switch controllers mount behind modules; slide‑in custom labels",
+    "24‑point I/O module with selectable input (maintained/momentary) or output drivers",
+    "Panel‑mounted thermal printer; 20 visible lines; RS‑232 from control panel"
+  ]
+}

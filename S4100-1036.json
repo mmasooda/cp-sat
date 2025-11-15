@@ -1,0 +1,500 @@
+{
+  "source_pdf": "S4100-1036.pdf",
+  "doc_id": "S4100-1036 Rev. 9 09/2024",
+  "title": "4100ES Network Display Units with Voice Command Center and ES-PS Power Supplies for 4120 Network",
+  "brand": "Simplex / Johnson Controls",
+  "compiled_at": "2025-11-15T19:07:15.522117Z",
+  "figures": [
+    {
+      "page": 1,
+      "figure": "Figure 1",
+      "caption": "Network One-Line Diagram Showing an NDU with VCC"
+    },
+    {
+      "page": 2,
+      "figure": "Figure 2",
+      "caption": "NDU with VCC Internal Module Bay Reference (three-bay cabinet map)"
+    },
+    {
+      "page": 3,
+      "figure": "Figure 3",
+      "caption": "ES Touch Screen Display Interface"
+    },
+    {
+      "page": 3,
+      "figure": "Figure 4",
+      "caption": "Monochrome 2 Line x 40 Character Display"
+    },
+    {
+      "page": 4,
+      "figure": "Figure 5",
+      "caption": "ES Touch Screen Display Operator Interface callouts"
+    },
+    {
+      "page": 6,
+      "figure": "Figure 6",
+      "caption": "First and Most Recent Alarm Display"
+    },
+    {
+      "page": 6,
+      "figure": "Figure 7",
+      "caption": "Main Menu"
+    },
+    {
+      "page": 6,
+      "figure": "Figure 8",
+      "caption": "First Eight Active Trouble Events List"
+    },
+    {
+      "page": 6,
+      "figure": "Figure 9",
+      "caption": "Direct Point Callup"
+    },
+    {
+      "page": 6,
+      "figure": "Figure 10",
+      "caption": "Alarm History Log"
+    },
+    {
+      "page": 6,
+      "figure": "Figure 11",
+      "caption": "Detailed Point Status Screen for TrueAlert ES Appliance"
+    },
+    {
+      "page": 8,
+      "figure": "Figure 12",
+      "caption": "Operator Interface Features — Monochrome 2 x 40 LCD"
+    },
+    {
+      "page": 14,
+      "figure": "Figure 13",
+      "caption": "Expansion Bay Module Loading Reference (Block/Slot map)"
+    },
+    {
+      "page": 15,
+      "figure": "Figure 14",
+      "caption": "Wall Mounted Enclosure Installation Reference"
+    }
+  ],
+  "tables": {
+    "Table 1 — General ES Touch Screen Display Specifications": [
+      {
+        "spec": "Resolution",
+        "rating": "800 x 600 Pixels (RGB)"
+      },
+      {
+        "spec": "Size / Type",
+        "rating": "8 inch (203 mm) Diagonal / Color Touch Screen"
+      },
+      {
+        "spec": "Touch Screen Technology",
+        "rating": "Resistive"
+      },
+      {
+        "spec": "Event Display",
+        "rating": "Up to 8 Events without scrolling"
+      },
+      {
+        "spec": "Normal Screen Custom Watermark File Format",
+        "rating": "680 x 484 Pixels; BMP, JPG, TIFF, GIF or PNG"
+      },
+      {
+        "spec": "Environmental",
+        "rating": "32°F to 120°F (0°C to 49°C); ≤93% RH @ 90°F (32°C), non‑condensing"
+      }
+    ],
+    "Table 2 — Network Display Unit, Non‑Voice": [
+      {
+        "model": "4100-9720",
+        "input_power": "120 to 240 VAC",
+        "includes": "NDU Master Controller Bay w/ English 2x40, CPU Card, 4120 NIC, ES‑PS (Aux Relay, 2 A Aux Tap, 110 Ah Charger), external RUI+ (isolated or un‑isolated)",
+        "listing": "UL/ULC",
+        "supv_current": "323 mA",
+        "alarm_current": "367 mA"
+      },
+      {
+        "model": "4100-9721",
+        "input_power": "120 to 240 VAC",
+        "includes": "As 4100‑9720 w/ Canadian French UI",
+        "listing": "ULC",
+        "supv_current": "323 mA",
+        "alarm_current": "367 mA"
+      },
+      {
+        "model": "4100-9725",
+        "input_power": "120 to 240 VAC",
+        "includes": "As 4100‑9720 w/ Color ES Touch Screen Display",
+        "listing": "UL/ULC, CSFM",
+        "supv_current": "408 mA",
+        "alarm_current": "487 mA"
+      }
+    ],
+    "Table 3 — Network Display Unit with Voice Command Center (VCC)": [
+      {
+        "model": "4100-9730",
+        "input_power": "120 to 240 VAC",
+        "includes": "NDU bay (English 2x40, CPU, 4120 NIC, ES‑PS, external RUI+) + VCC bay (CPU, 4120 NIC, IDNet 2 card up to 250 pts, ES‑PS, external RUI+)",
+        "listing": "UL/ULC",
+        "supv_current": "636 mA",
+        "alarm_current": "689 mA"
+      },
+      {
+        "model": "4100-9731",
+        "input_power": "120 to 240 VAC",
+        "includes": "As 4100‑9730 w/ Canadian French UI in NDU bay",
+        "listing": "ULC",
+        "supv_current": "636 mA",
+        "alarm_current": "689 mA"
+      },
+      {
+        "model": "4100-9735",
+        "input_power": "120 to 240 VAC",
+        "includes": "As 4100‑9730 w/ Color ES Touch Screen Display",
+        "listing": "UL/ULC, CSFM",
+        "supv_current": "721 mA",
+        "alarm_current": "809 mA"
+      }
+    ],
+    "Table 4 — Media cards for 4120 Modular Network Interface Cards": [
+      {
+        "model": "4100-6056",
+        "description": "Wired network media card; supports Class B or X; up to two per NIC",
+        "supv_current": "55 mA",
+        "alarm_current": "55 mA"
+      },
+      {
+        "model": "4100-6301",
+        "description": "Left port, single‑mode duplex fiber media card",
+        "supv_current": "55 mA",
+        "alarm_current": "55 mA"
+      },
+      {
+        "model": "4100-6302",
+        "description": "Right port, single‑mode duplex fiber media card",
+        "supv_current": "55 mA",
+        "alarm_current": "55 mA"
+      },
+      {
+        "model": "4100-6303",
+        "description": "Left port, multi‑mode duplex fiber media card",
+        "supv_current": "55 mA",
+        "alarm_current": "55 mA"
+      },
+      {
+        "model": "4100-6304",
+        "description": "Right port, multi‑mode duplex fiber media card",
+        "supv_current": "55 mA",
+        "alarm_current": "55 mA"
+      }
+    ],
+    "Table 5 — ES Net fiber media card service kits": [
+      {
+        "model": "4100-6412",
+        "fiber_type": "50/125 μm multi‑mode",
+        "description": "ST→SC patch + coupler + clamp + sleeve (retrofit)"
+      },
+      {
+        "model": "4100-6413",
+        "fiber_type": "62.5/125 μm multi‑mode",
+        "description": "ST→SC patch + coupler + clamp + sleeve (retrofit)"
+      },
+      {
+        "model": "4100-6414",
+        "fiber_type": "9/125 μm single‑mode",
+        "description": "ST→SC patch + coupler + clamp + sleeve (retrofit)"
+      }
+    ],
+    "Table 6 — NDU Equipment Selection": [
+      {
+        "model": "4100-1291",
+        "description": "Remote Unit Interface (RUI); up to 3 per panel",
+        "size": "1 Slot",
+        "supv_current": "85 mA",
+        "alarm_current": "85 mA"
+      },
+      {
+        "model": "4100-6031",
+        "description": "City Circuit, with disconnect switches",
+        "supv_current": "20 mA",
+        "alarm_current": "36 mA"
+      },
+      {
+        "model": "4100-6032",
+        "description": "City Circuit, without disconnect switches",
+        "supv_current": "20 mA",
+        "alarm_current": "36 mA"
+      },
+      {
+        "model": "4100-6033",
+        "description": "Alarm/Supervisory/Trouble Relay Module (3 Form C @ 2 A, ES‑PS only, non power‑limited)",
+        "size": "1 Block",
+        "supv_current": "15 mA",
+        "alarm_current": "37 mA"
+      },
+      {
+        "model": "4100-6038",
+        "description": "Dual RS‑232 Interface; max 3 per panel",
+        "size": "1 Slot",
+        "supv_current": "132 mA",
+        "alarm_current": "132 mA"
+      },
+      {
+        "model": "4100-6080",
+        "description": "Side‑mount DACT, point/event reporting; includes two 2080‑9047 cables; max 2",
+        "size": "1 Slot",
+        "supv_current": "30 mA",
+        "alarm_current": "40 mA"
+      },
+      {
+        "model": "4100-9816",
+        "description": "Master Clock Interface (with RS‑232)",
+        "size": "1 Slot",
+        "supv_current": "132 mA",
+        "alarm_current": "132 mA"
+      },
+      {
+        "model": "4100-6079",
+        "description": "SafeLINC Internet Interface",
+        "size": "2 Slots",
+        "supv_current": "145 mA",
+        "alarm_current": "145 mA"
+      },
+      {
+        "model": "4100-1290",
+        "description": "24‑Point I/O Module",
+        "size": "1 Slot",
+        "supv_current": "34 mA",
+        "alarm_current": "75 mA"
+      },
+      {
+        "model": "4100-6072/6073/6074/6075",
+        "description": "Fiber Modem Assemblies (single/multi‑mode; left/right)",
+        "size": "2 Vertical Blocks",
+        "note": "See S4100‑0049"
+      },
+      {
+        "model": "4100-6069",
+        "description": "BACpac Ethernet Module – 1500 Points",
+        "size": "1 Slot",
+        "supv_current": "123 mA",
+        "alarm_current": "123 mA"
+      },
+      {
+        "model": "4100-6110",
+        "description": "BACpac Ethernet Module – 5,000 Points",
+        "size": "1 Slot",
+        "supv_current": "123 mA",
+        "alarm_current": "123 mA"
+      },
+      {
+        "model": "4100-6111",
+        "description": "BACpac Ethernet Module – 15,000 Points",
+        "size": "1 Slot",
+        "supv_current": "123 mA",
+        "alarm_current": "123 mA"
+      },
+      {
+        "model": "4100-6101",
+        "description": "Physical Bridge Module Class B",
+        "size": "1 Slot",
+        "supv_current": "210 mA",
+        "alarm_current": "210 mA"
+      },
+      {
+        "model": "4100-6102",
+        "description": "Physical Bridge Module Class X",
+        "size": "2 Slots",
+        "supv_current": "300 mA",
+        "alarm_current": "300 mA"
+      }
+    ],
+    "Table 7 — ES Power Supplies": [
+      {
+        "model": "4100-5401",
+        "voltage": "120–240 V 50/60 Hz",
+        "type": "ES‑PS",
+        "includes": "Aux Relay; 2 A Aux Tap/Simple NAC; 110 Ah Battery Charger; 2 PDI blocks",
+        "provides_power_to_bay": true
+      },
+      {
+        "model": "4100-5402",
+        "voltage": "120–240 V 50/60 Hz",
+        "type": "ES‑XPS",
+        "includes": "As ES‑PS but NO battery charger",
+        "provides_power_to_bay": false,
+        "size": "2 Blocks",
+        "supv_current": "68 mA",
+        "alarm_current": "77 mA"
+      }
+    ],
+    "Table 8 — Power Supply Accessories": [
+      {
+        "model": "4100-5152",
+        "description": "12 VDC Power Option, 2 A max",
+        "size": "1 Block",
+        "current": "Up to 1.5 A (load dependent)"
+      },
+      {
+        "model": "4100-0156",
+        "description": "8 VDC Converter for multiple Physical Bridge Modules, 3 A max",
+        "size": "1 Block"
+      },
+      {
+        "model": "4100-5130",
+        "description": "Voltage Regulator Module, 22.8–26.4 VDC (25 V nominal); isolated/resettable; earth detect + trouble relay",
+        "size": "1 Block",
+        "current": "3 A max @ 2.5 A load; 4.9 A max @ 4 A load"
+      },
+      {
+        "model": "4100-5131",
+        "description": "ES‑PS Fan Module (enables multiple PS per bay; may increase capacity)",
+        "supv_current": "0 mA",
+        "alarm_current": "200 mA"
+      },
+      {
+        "model": "4100-0636",
+        "description": "Box Interconnection Harness Kit (non‑audio)"
+      },
+      {
+        "model": "4100-0638",
+        "description": "4100 Slot Module Additional 24 VDC Harness"
+      },
+      {
+        "model": "4100-5403",
+        "description": "Harness for ES‑PS Backup Power Supply"
+      },
+      {
+        "model": "4100-0644/0645/0646/0647",
+        "description": "PDM Harness for 120/220/230/240 VAC — one per PS"
+      }
+    ],
+    "Table 9 — ES Power Supply Specifications (ES‑PS and ES‑XPS)": [
+      {
+        "spec": "AC Input Power",
+        "rating": "120–240 VAC; 120 VAC 3.72 A; 220–240 VAC 1.82 A"
+      },
+      {
+        "spec": "Total DC Output Power Capacity — Without Fan",
+        "rating": "9.5 A"
+      },
+      {
+        "spec": "Total DC Output Power Capacity — With 4100‑5131 Fan and 4100‑5451 IDNAC",
+        "rating": "9.7 A"
+      },
+      {
+        "spec": "Total DC Output Power Capacity — With 4100‑5131 Fan (no 4100‑5451)",
+        "rating": "12.7 A"
+      },
+      {
+        "spec": "With Regulated 24V Appliance Loads",
+        "rating": "5.0 A"
+      },
+      {
+        "spec": "Auxiliary Power Tap",
+        "rating": "2 A max (from total capacity)"
+      },
+      {
+        "spec": "NACs Programmed for Auxiliary Power",
+        "rating": "3 A per NAC; 5 A total (from total capacity)"
+      },
+      {
+        "spec": "Battery Charger (ES‑PS only)",
+        "rating": "Sealed Lead‑Acid; UL/ULC listed up to 110 Ah (remote if >50 Ah)"
+      },
+      {
+        "spec": "Charger Performance",
+        "rating": "Temp‑compensated, dual rate; recharges depleted batteries within 48 h"
+      },
+      {
+        "spec": "Operating Temperature",
+        "rating": "32°F to 120°F (0°C to 49°C)"
+      },
+      {
+        "spec": "Operating Humidity",
+        "rating": "≤93% RH, non‑condensing @ 90°F (32°C)"
+      },
+      {
+        "spec": "Option Card Mounting",
+        "rating": "Two vertical blocks available (see 579‑1288)"
+      }
+    ],
+    "Table 10 — Additional 4100ES & 4120 Network Product Reference": [
+      {
+        "subject": "Serial DACT (SDACT) for 4100ES, 4010ES, 4007ES",
+        "datasheet": "S2080-0009"
+      },
+      {
+        "subject": "Battery and Battery Cabinet Reference for 4100ES",
+        "datasheet": "S2081-0006"
+      },
+      {
+        "subject": "110 Ah Batteries and Cabinets for 4100ES",
+        "datasheet": "S2081-0012"
+      },
+      {
+        "subject": "External 110 Ah Battery Charger for 4100ES, 4010ES",
+        "datasheet": "S4081-0002"
+      },
+      {
+        "subject": "TCP/IP Physical Bridge Modules for 4120 Networks",
+        "datasheet": "S4100-0029"
+      },
+      {
+        "subject": "4100ES LED/Switch Modules & Printer",
+        "datasheet": "S4100-0032"
+      },
+      {
+        "subject": "4100ES Enclosures",
+        "datasheet": "S4100-0037"
+      },
+      {
+        "subject": "Multiple Signal Fiber Optic Modems for 4120 Networks",
+        "datasheet": "S4100-0049"
+      },
+      {
+        "subject": "BACpac Ethernet Module",
+        "datasheet": "S4100-0051"
+      },
+      {
+        "subject": "4120 Network Products and Specifications",
+        "datasheet": "S4100-0056"
+      },
+      {
+        "subject": "Physical Bridge Modules for 4120 Networks",
+        "datasheet": "S4100-0057"
+      },
+      {
+        "subject": "Building Network Interface Card (BNIC)",
+        "datasheet": "S4100-0061"
+      },
+      {
+        "subject": "SafeLINC Internet Interface",
+        "datasheet": "S4100-0062"
+      },
+      {
+        "subject": "4100ES Basic Panels with ES‑PS Power Supplies",
+        "datasheet": "S4100-1031"
+      },
+      {
+        "subject": "4100ES Emergency Voice/Alarm Equipment",
+        "datasheet": "S4100-1034"
+      },
+      {
+        "subject": "InfoAlarm Command Center for ES‑PS Power Supplies",
+        "datasheet": "S4100-1045"
+      },
+      {
+        "subject": "TrueSite Workstation",
+        "datasheet": "S4190-0016"
+      },
+      {
+        "subject": "TrueSite Incident Commander",
+        "datasheet": "S4190-0020"
+      },
+      {
+        "subject": "Network System Integrator (NSI)",
+        "datasheet": "S4190-0026"
+      }
+    ]
+  }
+}

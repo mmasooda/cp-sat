@@ -1,0 +1,245 @@
+{
+  "source_pdf": "4100-0037.pdf",
+  "doc_id": "S4100-0037 Rev. 17 5/2021",
+  "title": "4100ES Fire Control Panels — Cabinet Reference; Boxes, Doors, Dress Panels, Rack Mounting, and Accessories",
+  "brand": "Simplex / Johnson Controls",
+  "compiled_at": "2025-11-15T19:00:27.960795Z",
+  "figures": [
+    {
+      "page": 1,
+      "figure": "Figure 1",
+      "caption": "4100ES One bay cabinet"
+    },
+    {
+      "page": 1,
+      "figure": "Figure 2",
+      "caption": "4100ES Two bay cabinets (glass and solid door examples)"
+    },
+    {
+      "page": 1,
+      "figure": "Figure 3",
+      "caption": "4100ES Three bay cabinets (glass and solid door examples)"
+    },
+    {
+      "page": 4,
+      "figure": "Figure 4",
+      "caption": "Wall mounted enclosure installation reference; front and side views with stud alignment markers and semi-flush dimensions"
+    }
+  ],
+  "tables": {
+    "Table 1 — Combined box and door selection (box + door shipped together)": [
+      {
+        "description": "Box with Glass Door and Dress Panel",
+        "platinum_1_bay": "2975-9444",
+        "platinum_2_bay": "2975-9445",
+        "platinum_3_bay": "2975-9446",
+        "red_1_bay": "2975-9441",
+        "red_2_bay": "2975-9442",
+        "red_3_bay": "2975-9443"
+      },
+      {
+        "description": "Box with Solid Door",
+        "platinum_1_bay": "2975-9450",
+        "platinum_2_bay": "2975-9451",
+        "platinum_3_bay": "2975-9452",
+        "red_1_bay": "2975-9447",
+        "red_2_bay": "2975-9448",
+        "red_3_bay": "2975-9449"
+      }
+    ],
+    "Table 2 — Separate box and door selection (ship separately)": [
+      {
+        "description": "Box",
+        "platinum_1_bay": "2975-9438",
+        "platinum_2_bay": "2975-9439",
+        "platinum_3_bay": "2975-9440",
+        "red_1_bay": "2975-9407",
+        "red_2_bay": "2975-9408",
+        "red_3_bay": "2975-9409"
+      },
+      {
+        "description": "Glass Door and Dress Panel",
+        "platinum_1_bay": "4100-2104",
+        "platinum_2_bay": "4100-2105",
+        "platinum_3_bay": "4100-2106",
+        "red_1_bay": "4100-2124",
+        "red_2_bay": "4100-2125",
+        "red_3_bay": "4100-2126"
+      },
+      {
+        "description": "Solid Door",
+        "platinum_1_bay": "4100-2114",
+        "platinum_2_bay": "4100-2115",
+        "platinum_3_bay": "4100-2116",
+        "red_1_bay": "4100-2134",
+        "red_2_bay": "4100-2135",
+        "red_3_bay": "4100-2136"
+      }
+    ],
+    "Table 3 — Cabinet rack mounting": [
+      {
+        "sku": "4100-2140",
+        "description": "Master controller rack mount kit (one required per master controller)"
+      },
+      {
+        "sku": "4100-2145",
+        "description": "Option bay rack mounting kit (one required per expansion bay)"
+      },
+      {
+        "sku": "4100-2144",
+        "description": "Power distribution module (PDM) rack mount kit (order PDM separately per system voltage; one required per cabinet rack)"
+      }
+    ],
+    "Table 4 — Power distribution modules": [
+      {
+        "sku": "4100-0634",
+        "voltage": "120 VAC",
+        "description": "Power Distribution Module (PDM); select per system voltage; one required for each 4100ES box or cabinet rack"
+      },
+      {
+        "sku": "4100-0635",
+        "voltage": "220/230/240 VAC",
+        "description": "Power Distribution Module (PDM); select per system voltage; one required for each 4100ES box or cabinet rack"
+      }
+    ],
+    "Table 5 — Miscellaneous accessories": [
+      {
+        "sku": "252-019",
+        "description": "Door key ('B' key). One ships with system Master Controller; order for replacement or extra keys"
+      },
+      {
+        "sku": "4100-9856",
+        "description": "4100ES Canadian French Appliqué Kit (1, 2, or 3 bay)"
+      },
+      {
+        "sku": "4100-9857",
+        "description": "4100ES Appliqué Retrofit Kit (1, 2, or 3 bay); identifies 4100ES features when a new door is not used; included with Master Controller Upgrade kits (S4100-0031)"
+      },
+      {
+        "sku": "4100-9868",
+        "description": "Special Purpose Appliqué Kit — Simplex Elevator Recall Control and Supervisory Control Unit, 4100ES"
+      },
+      {
+        "sku": "4100-9869",
+        "description": "Special Purpose Appliqué Kit — Simplex Sprinkler Waterflow and Supervisory Station, 4100ES"
+      },
+      {
+        "sku": "4100-9835",
+        "description": "Termination and Address Label Kit for module marking; one kit supplied for each cabinet; order for additional field module installation"
+      },
+      {
+        "sku": "4100-9837",
+        "description": "Green LED Power-on Indicator Kit; required for ULC listing of MINIPLEX transponder; mounts in solid door knockout"
+      },
+      {
+        "sku": "2975-9813",
+        "description": "Platinum semi-flush box trim; 1 7/16 in (37 mm) wide; four corners and trim pieces for top, bottom, and sides"
+      },
+      {
+        "sku": "2975-9812",
+        "description": "Red semi-flush box trim; 1 7/16 in (37 mm) wide; four corners and trim pieces for top, bottom, and sides"
+      }
+    ],
+    "Table 6 — Battery reference": [
+      {
+        "sku": "2081-9272",
+        "capacity": "6.2 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      },
+      {
+        "sku": "2081-9274",
+        "capacity": "10 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      },
+      {
+        "sku": "2081-9288",
+        "capacity": "12.7 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      },
+      {
+        "sku": "2081-9275",
+        "capacity": "18 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      },
+      {
+        "sku": "2081-9287",
+        "capacity": "25 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      },
+      {
+        "sku": "2081-9276",
+        "capacity": "33 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      },
+      {
+        "sku": "2081-9296",
+        "capacity": "50 Ah",
+        "battery_notes": "Sealed lead‑acid, 12 VDC each; two required per battery location"
+      }
+    ],
+    "Table 7 — Battery accessories": [
+      {
+        "sku": "4100-0650",
+        "description": "Battery Shelf (required for 50 Ah batteries)"
+      },
+      {
+        "sku": "4100-5128",
+        "description": "Battery Distribution Terminal Block; mounts to side of box; required for all close‑nippled cabinets unless cabinet receives all power from power supplies and batteries in adjacent cabinet"
+      }
+    ],
+    "Table 8 — Additional data sheet reference": [
+      {
+        "subject": "Graphic I/O Modules for 4100ES, 4010ES, 4007ES",
+        "datasheet": "S4100-0005"
+      },
+      {
+        "subject": "4100ES Basic Panels with SPS Power Supplies",
+        "datasheet": "S4100-0031"
+      },
+      {
+        "subject": "4100ES Emergency Voice/Alarm Equipment",
+        "datasheet": "S4100-0034"
+      },
+      {
+        "subject": "MINIPLEX Transponders with SPS Power Supplies",
+        "datasheet": "S4100-0035"
+      },
+      {
+        "subject": "NDU with SPS Power Supplies for 4120 Network",
+        "datasheet": "S4100-0036"
+      },
+      {
+        "subject": "4100ES Remote Annunciator Panels",
+        "datasheet": "S4100-0038"
+      },
+      {
+        "subject": "InfoAlarm Command Center with SPS Power Supplies",
+        "datasheet": "S4100-0045"
+      },
+      {
+        "subject": "NDU with SPS Power Supplies for ES Net",
+        "datasheet": "S4100-0077"
+      },
+      {
+        "subject": "4100ES Basic Panels with EPS Power Supplies",
+        "datasheet": "S4100-0100"
+      },
+      {
+        "subject": "InfoAlarm Command Center with EPS Power Supplies",
+        "datasheet": "S4100-0101"
+      },
+      {
+        "subject": "NDU with EPS Power Supplies for 4120 Network",
+        "datasheet": "S4100-0102"
+      },
+      {
+        "subject": "MINIPLEX Transponders with EPS Power Supplies",
+        "datasheet": "S4100-0103"
+      },
+      {
+        "subject": "NDU with EPS Power Supplies for ES Net",
+        "datasheet": "S4100-0104"
+      }
+    ]
+  }
+}

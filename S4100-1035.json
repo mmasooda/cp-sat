@@ -1,0 +1,821 @@
+{
+  "source_pdf": "S4100-1035.pdf",
+  "doc_id": "S4100-1035 Rev. 7 08/2024",
+  "title": "MINIPLEX Transponders with ES-PS Power Supplies — 4100ES Fire Control Units",
+  "brand": "Simplex / Johnson Controls",
+  "compiled_at": "2025-11-15T19:04:43.021991Z",
+  "figures": [
+    {
+      "page": 1,
+      "figure": "Figure 1",
+      "caption": "Typical 4100ES MINIPLEX System One-Line Drawing"
+    },
+    {
+      "page": 2,
+      "figure": "Figure 2",
+      "caption": "Local Mode Controller Module (front and indicators)"
+    },
+    {
+      "page": 3,
+      "figure": "-",
+      "caption": "Typical Multi-Floor MINIPLEX Audio System (diagram)"
+    },
+    {
+      "page": 4,
+      "figure": "-",
+      "caption": "Expansion Bay Module Loading Reference (Block/Slot map)"
+    },
+    {
+      "page": 10,
+      "figure": "Figure 3",
+      "caption": "Local Mode Controller Detail with dimensions and wiring notes"
+    },
+    {
+      "page": 11,
+      "figure": "-",
+      "caption": "Enclosure Installation Reference (front/side views; semi-flush dimensions & notes)"
+    }
+  ],
+  "tables": {
+    "Table 1 — ES Power Supply Specifications (ES-PS and ES-XPS)": [
+      {
+        "spec": "AC Input Power",
+        "rating": "120–240 VAC; 120 VAC 3.72 A; 220–240 VAC 1.82 A"
+      },
+      {
+        "spec": "Total DC Output — Without Fan",
+        "rating": "9.5 A"
+      },
+      {
+        "spec": "Total DC Output — With 4100-5131 Fan and 4100-5451 IDNAC",
+        "rating": "9.7 A"
+      },
+      {
+        "spec": "Total DC Output — With 4100-5131 Fan (no 4100-5451)",
+        "rating": "12.7 A"
+      },
+      {
+        "spec": "With Regulated 24V Appliance Loads",
+        "rating": "5.0 A"
+      },
+      {
+        "spec": "Auxiliary Power Tap",
+        "rating": "2 A max (from total output capacity)"
+      },
+      {
+        "spec": "NACs Programmed for Auxiliary Power",
+        "rating": "3 A max per NAC; 5 A total (from total capacity)"
+      },
+      {
+        "spec": "Battery Charger (ES-PS only)",
+        "rating": "Sealed Lead-Acid up to 110 Ah (remote if >50 Ah)"
+      },
+      {
+        "spec": "Recharge Performance",
+        "rating": "Temp-compensated, dual rate; recharges within 48 h"
+      },
+      {
+        "spec": "Operating Temperature",
+        "rating": "32°F to 120°F (0°C to 49°C)"
+      },
+      {
+        "spec": "Operating Humidity",
+        "rating": "≤93% RH non-condensing @ 90°F (32°C)"
+      },
+      {
+        "spec": "Option Card Mounting",
+        "rating": "Two vertical blocks available (see 579-1288)"
+      }
+    ],
+    "Table 2 — IDNet/MAPNET/IDNet2/IDNet2+2 SLC Wiring Common": [
+      {
+        "spec": "Max distance (devices 1–125)",
+        "value": "4000 ft (1219 m); 50 Ω"
+      },
+      {
+        "spec": "Max distance (devices 126–250)",
+        "value": "2500 ft (762 m); 35 Ω"
+      },
+      {
+        "spec": "Connections",
+        "value": "18–12 AWG (0.82–3.31 mm²)"
+      }
+    ],
+    "Table 3 — IDNet and MAPNET II Specifications": [
+      {
+        "spec": "Wire Type (New Install)",
+        "value": "Shielded twisted pair (STP)"
+      },
+      {
+        "spec": "Wire Type (Retrofit)",
+        "value": "Unshielded twisted pair (UTP)"
+      },
+      {
+        "spec": "Total wire length with T-taps (Class B)",
+        "value": "Up to 10,000 ft (3 km); 0.58 μF"
+      }
+    ],
+    "Table 4 — IDNet 2 and IDNet 2+2 Wiring Specifications": [
+      {
+        "spec": "Wire Type (New Install)",
+        "value": "Unshielded twisted pair (UTP)"
+      },
+      {
+        "spec": "Wire Type (Retrofit)",
+        "value": "Shielded or unshielded; twisted or untwisted wire"
+      },
+      {
+        "spec": "Total wire length with T-taps (Class B)",
+        "value": "Up to 12,500 ft (3.8 km); 0.60 μF"
+      },
+      {
+        "spec": "Max capacitance between channels",
+        "value": "1 μF"
+      },
+      {
+        "compatibility": "IDNet communicating devices & TrueAlarm sensors incl. QuickConnect/QuickConnect2"
+      }
+    ],
+    "Table 5 — Transponder Type": [
+      {
+        "sku": "4100-9600",
+        "description": "Basic Transponder; bay equipment with PDI; includes 4100-0620 Basic Transponder Interface Module in Block A",
+        "supv_current": "36 mA",
+        "alarm_current": "36 mA"
+      },
+      {
+        "sku": "4100-9601",
+        "description": "Local Mode Transponder; bay equipment with PDI; includes 4100-0625 Local Mode Transponder Interface Module in Block A",
+        "supv_current": "38 mA (normal) / 23 mA (local mode)",
+        "alarm_current": "38 mA (normal) / 23 mA (local mode)"
+      }
+    ],
+    "Table 6 — ES Power Supplies": [
+      {
+        "model": "4100-5401",
+        "voltage": "120–240 V 50/60 Hz",
+        "type": "ES-PS",
+        "includes": "Aux Relay; 2 A Aux Tap/Simple NAC; 110 Ah Charger; 2 PDI blocks",
+        "provides_power_to_bay": true,
+        "size": "2 Blocks"
+      },
+      {
+        "model": "4100-5402",
+        "voltage": "120–240 V 50/60 Hz",
+        "type": "ES-XPS",
+        "includes": "Same as ES-PS except NO charger",
+        "provides_power_to_bay": false,
+        "size": "2 Blocks",
+        "supv_current": "68 mA",
+        "alarm_current": "77 mA"
+      }
+    ],
+    "Table 7 — Power Supply Accessories": [
+      {
+        "model": "4100-5152",
+        "description": "12 VDC Power Option, 2 A max",
+        "size": "1 Block",
+        "current": "Up to 1.5 A (load dependent)"
+      },
+      {
+        "model": "4100-0156",
+        "description": "8 VDC Converter for multiple Physical Bridge Modules, 3 A max",
+        "size": "1 Block"
+      },
+      {
+        "model": "4100-5130",
+        "description": "Voltage Regulator Module, 22.8–26.4 VDC (25 V nominal); isolated/resettable; earth detect + trouble relay",
+        "size": "1 Block",
+        "current": "3 A max with 2.5 A load; 4.9 A max with 4 A load"
+      },
+      {
+        "model": "4100-5131",
+        "description": "ES-PS Fan Module; allows multiple PS per bay; may increase capacity (see Table 1)",
+        "size": "N/A",
+        "current": {
+          "supv": "0 mA",
+          "alarm": "200 mA"
+        }
+      },
+      {
+        "model": "4100-0636",
+        "description": "Box Interconnection Harness Kit (non-audio) — one per close-nippled cabinet"
+      },
+      {
+        "model": "4100-0638",
+        "description": "4100 Slot Module Additional 24 VDC Harness"
+      },
+      {
+        "model": "4100-5403",
+        "description": "Harness for ES-PS Backup Power Supply"
+      },
+      {
+        "model": "4100-0644/0645/0646/0647",
+        "description": "PDM Harness for 120/220/230/240 VAC — one per PS"
+      }
+    ],
+    "Table 8 — Conventional and Addressable Notification Appliance Modules": [
+      {
+        "model": "4100-5450",
+        "description": "Conventional NAC Module",
+        "outputs": "Three 3 A NACs",
+        "size": "1 Block",
+        "max_load_special_app": {
+          "on_es_ps_xps": "3.0 A/NAC; 9.0 A/Card",
+          "in_bay": "3.0 A/NAC; 6.0 A/Card"
+        },
+        "max_load_reg_24v": {
+          "on_es_ps_xps": "2.0 A/NAC; 5.0 A/Card",
+          "in_bay": "2.0 A/NAC; 2.0 A/Card"
+        },
+        "current_draw": {
+          "supv": "66 mA",
+          "alarm": "66 mA"
+        }
+      },
+      {
+        "model": "4100-5451",
+        "description": "IDNAC Addressable Notification SLC Module",
+        "outputs": "Three 3 A SLCs",
+        "size": "2 Blocks (on ES Power Supply only)",
+        "max_load_special_app": {
+          "on_es_ps_xps": "3.0 A/NAC; 9.0 A/Card"
+        },
+        "max_load_reg_24v": "N/A",
+        "current_draw": {
+          "supv": "124 mA",
+          "alarm": "230 mA"
+        }
+      }
+    ],
+    "Table 9 — Dual Class A Isolator for IDNAC": [
+      {
+        "model": "4100-6103",
+        "description": "Dual Class A IDNAC Isolator (DCAI): converts one Class B IDNAC SLC to two Class A SLC outputs; short-circuit isolation; up to 2 per SLC (max 6 per SLC). Each isolated loop uses one IDNAC address; up to 30 device addresses per isolated loop.",
+        "size": "1 Block",
+        "current_draw": {
+          "supv": "8.3 mA",
+          "alarm": "18.5 mA"
+        }
+      }
+    ],
+    "Table 10 — Addressable Interface Modules": [
+      {
+        "model": "4100-3109",
+        "description": "IDNet 2 Module, 250-point; isolated; two Class B/A outputs; 1 block",
+        "device_currents_mA": {
+          "none": {
+            "supv": 50,
+            "alarm": 60
+          },
+          "50": {
+            "supv": 90,
+            "alarm": 150
+          },
+          "125": {
+            "supv": 150,
+            "alarm": 225
+          },
+          "250": {
+            "supv": 250,
+            "alarm": 350
+          }
+        }
+      },
+      {
+        "model": "4100-3110",
+        "description": "IDNet 2+2 Module, 250-point; isolated; four Class B/A outputs; 1 block",
+        "device_currents_mA": {
+          "none": {
+            "supv": 50,
+            "alarm": 60
+          },
+          "50": {
+            "supv": 90,
+            "alarm": 150
+          },
+          "125": {
+            "supv": 150,
+            "alarm": 225
+          },
+          "250": {
+            "supv": 250,
+            "alarm": 350
+          }
+        }
+      },
+      {
+        "model": "4100-3111",
+        "description": "IDNet Short Circuit Isolating Loop Output Module; field add-on; up to two on a 4100-3109 module"
+      },
+      {
+        "model": "4100-3102",
+        "description": "MAPNET II Module, 127-point; 2 Slots",
+        "module_currents_mA": {
+          "module_only": {
+            "supv": 255,
+            "alarm": 275
+          },
+          "per_device": "1.7 mA"
+        }
+      },
+      {
+        "model": "4100-3103",
+        "description": "MAPNET II Isolator Module; converts one SLC to four isolated outputs (Class A/B); 1 Slot; compatible with MAPNET II Remote Isolators only",
+        "currents_mA": {
+          "supv": 50,
+          "alarm": 50
+        }
+      }
+    ],
+    "Table 11 — Current draw for each IDNet device": [
+      {
+        "condition": "Standby",
+        "current": "0.8 mA"
+      },
+      {
+        "condition": "Alarm (LED off)",
+        "current": "1.0 mA"
+      },
+      {
+        "condition": "Alarm (LED on)",
+        "current": "3.0 mA",
+        "note": "Max 20 device LEDs on per channel"
+      }
+    ],
+    "Table 12 — 8-Point Zone/Relay Card": [
+      {
+        "model": "4100-5013",
+        "description": "8-point zone/relay 4x5\" flat module",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "83 mA",
+          "alarm": "351 mA"
+        }
+      },
+      {
+        "model": "4100-6305",
+        "description": "25 V regulator harness for 8-point zone/relay module",
+        "size": "N/A"
+      }
+    ],
+    "Table 13 — Relay Modules (Non power-limited)": [
+      {
+        "model": "4100-3207",
+        "description": "Four DPDT with feedback",
+        "resistive_ratings": "2 A @ 30 VDC/30 VAC",
+        "inductive_ratings": "0.5 A @ 30 VDC or 120 VAC",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "18 mA",
+          "alarm": "65 mA"
+        }
+      },
+      {
+        "model": "4100-3208",
+        "description": "Four DPDT with feedback",
+        "resistive_ratings": "10 A @ 30 VDC/120/240 VAC",
+        "inductive_ratings": "10 A @ 30 VDC/120/240 VAC",
+        "size": "2 Slots",
+        "currents_mA": {
+          "supv": "20 mA",
+          "alarm": "188 mA"
+        }
+      },
+      {
+        "model": "4100-3209",
+        "description": "Eight SPDT with feedback",
+        "resistive_ratings": "3 A @ 30 VDC or 120 VAC",
+        "inductive_ratings": "1.5 A @ 30 VDC or 120 VAC",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "16 mA",
+          "alarm": "200 mA"
+        }
+      }
+    ],
+    "Table 14 — Communication Modules": [
+      {
+        "sku": "4100-1291",
+        "description": "Remote Unit Interface Module (RUI, unisolated); up to 3 per control panel; for use with 4100-9600 only",
+        "size": "1 Slot",
+        "currents_mA": {
+          "supv": "85",
+          "alarm": "85"
+        }
+      },
+      {
+        "sku": "4100-6031",
+        "description": "City Circuit, with disconnect switches",
+        "currents_mA": {
+          "supv": "20",
+          "alarm": "36"
+        }
+      },
+      {
+        "sku": "4100-6032",
+        "description": "City Circuit, without disconnect switches",
+        "currents_mA": {
+          "supv": "20",
+          "alarm": "36"
+        }
+      },
+      {
+        "sku": "4100-6033",
+        "description": "Alarm Relay, three Form C (2 A @ 32 VDC); ES-PS only (non power-limited)",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "15",
+          "alarm": "37"
+        }
+      },
+      {
+        "sku": "4100-6038",
+        "description": "Dual RS-232 Interface",
+        "size": "1 Slot",
+        "currents_mA": {
+          "supv": "132",
+          "alarm": "132"
+        }
+      },
+      {
+        "sku": "4100-6045",
+        "description": "Decoder Module",
+        "size": "3 Slots",
+        "currents_mA": {
+          "supv": "85",
+          "alarm": "163"
+        }
+      },
+      {
+        "sku": "4100-6048",
+        "description": "VESDA Aspiration System Interface",
+        "size": "1 Slot",
+        "currents_mA": {
+          "supv": "132",
+          "alarm": "132"
+        }
+      },
+      {
+        "sku": "4100-9816",
+        "description": "Master Clock Interface (with RS-232) — see S4100-0033",
+        "size": "1 Slot",
+        "currents_mA": {
+          "supv": "132",
+          "alarm": "132"
+        }
+      }
+    ],
+    "Table 15 — Miscellaneous Options and Accessories": [
+      {
+        "model": "4100-1290",
+        "description": "24-Point I/O Module (switch input: maintained/momentary; or output for lamp/LED/relay); 1 Slot"
+      },
+      {
+        "model": "4100-0632",
+        "description": "Terminal Block Utility Module; two 16-position terminal blocks; up to 12 AWG (3.31 mm²)"
+      },
+      {
+        "model": "4100-0633",
+        "description": "Door Tamper Switch; connects to Transponder Interface Module"
+      },
+      {
+        "model": "4100-0634",
+        "description": "120 VAC Power Distribution Module (PDM) — one per box"
+      },
+      {
+        "model": "4100-0635",
+        "description": "220/230/240 VAC Power Distribution Module (PDM) — one per box"
+      },
+      {
+        "model": "2081-9031",
+        "description": "Series resistor for WSO/IDC (470 Ω, 1 W), encapsulated; two 18 AWG leads"
+      }
+    ],
+    "Table 16 — Audio Riser Modules": [
+      {
+        "sku": "4100-0621",
+        "description": "Dual Channel Analog Audio Riser Module; accepts one or two audio signals; mounts in Block B; controlled by Transponder Interface Module",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "0",
+          "alarm": "15"
+        }
+      },
+      {
+        "sku": "4100-0622",
+        "description": "3–8 Channel Digital Audio Riser Module; decodes digital input with up to eight audio channels; with NAA input",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "70",
+          "alarm": "70"
+        }
+      }
+    ],
+    "Table 17 — Analog EVAC Equipment (Constant Supervision Compatible)": [
+      {
+        "sku": "4100-1361",
+        "description": "Flex-35, 35 W Amplifier; 25 VRMS output; NAC rating 1.4 A; 35 W or 100 speakers"
+      },
+      {
+        "sku": "4100-1362",
+        "description": "Flex-35, 35 W Amplifier; 70.7 VRMS output; NAC rating 0.5 A; 35 W or 100 speakers"
+      },
+      {
+        "sku": "4100-1312",
+        "description": "Flex-50, 50 W Amplifier; 25 VRMS output; NAC rating 2 A; 50 W or 100 speakers; includes 3 on-board Class B NACs; power from ES-PS"
+      },
+      {
+        "sku": "4100-1313",
+        "description": "Flex-50, 50 W Amplifier; 70.7 VRMS output; NAC rating 0.707 A; 50 W or 100 speakers; includes 3 on-board Class B NACs; power from ES-PS"
+      }
+    ],
+    "Table 18 — 100 W Analog Amplifiers with Power Supply (Constant Supervision Compatible)": [
+      {
+        "sku_25v": "4100-1314",
+        "sku_70v": "4100-1315",
+        "input": "120 VAC 60 Hz",
+        "listing": "UL",
+        "description": "Primary 100 W Amplifier; six Class B NACs; NAC: 2 A @ 25 VRMS; 1.4 A @ 70.7 VRMS; 50 W or 100 speakers"
+      },
+      {
+        "sku_25v": "4100-1316",
+        "sku_70v": "4100-1317",
+        "input": "120 VAC 60 Hz",
+        "listing": "ULC",
+        "description": "Primary 100 W Amplifier; same as above; ULC models have low battery dropout"
+      },
+      {
+        "sku_25v": "4100-1318",
+        "sku_70v": "4100-1319",
+        "input": "220/230/240 VAC 50/60 Hz",
+        "listing": "UL",
+        "description": "Primary 100 W Amplifier; six Class B NACs; same ratings"
+      },
+      {
+        "sku_25v": "4100-1320",
+        "sku_70v": "4100-1321",
+        "input": "120 VAC 60 Hz",
+        "listing": "UL",
+        "description": "Backup 100 W Amplifier; uses six Class B NACs of primary amplifier"
+      },
+      {
+        "sku_25v": "4100-1322",
+        "sku_70v": "4100-1323",
+        "input": "120 VAC 60 Hz",
+        "listing": "ULC",
+        "description": "Backup 100 W Amplifier; uses six NACs of primary; ULC low battery dropout"
+      },
+      {
+        "sku_25v": "4100-1324",
+        "sku_70v": "4100-1325",
+        "input": "220/230/240 VAC 50/60 Hz",
+        "listing": "UL",
+        "description": "Backup 100 W Amplifier; uses six NACs of primary"
+      }
+    ],
+    "Table 19 — Digital EVAC Equipment (Constant Supervision Compatible)": [
+      {
+        "sku": "4100-1363",
+        "description": "Flex-35, 35 W Amplifier; 25 VRMS output; NAC rating 1.4 A; 35 W or 100 speakers"
+      },
+      {
+        "sku": "4100-1364",
+        "description": "Flex-35, 35 W Amplifier; 70.7 VRMS output; NAC rating 0.5 A; 35 W or 100 speakers"
+      },
+      {
+        "sku": "4100-1326",
+        "description": "Flex-50, 50 W Amplifier; 25 VRMS output; NAC rating 2 A; 50 W or 100 speakers; includes three on-board Class B NACs; power from ES-PS"
+      },
+      {
+        "sku": "4100-1327",
+        "description": "Flex-50, 50 W Amplifier; 70.7 VRMS output; NAC rating 0.707 A; 50 W or 100 speakers; includes three on-board Class B NACs; power from ES-PS"
+      }
+    ],
+    "Table 20 — 100 W Digital Amplifiers with Power Supply (Constant Supervision Compatible)": [
+      {
+        "sku_25v": "4100-1328",
+        "sku_70v": "4100-1329",
+        "input": "120 VAC 60 Hz",
+        "listing": "UL",
+        "description": "Primary 100 W Amplifier; six Class B NACs; 2 A @ 25 VRMS; 1.4 A @ 70.7 VRMS; 50 W or 100 speakers"
+      },
+      {
+        "sku_25v": "4100-1330",
+        "sku_70v": "4100-1331",
+        "input": "120 VAC 60 Hz",
+        "listing": "ULC",
+        "description": "Primary 100 W Amplifier; same as above; ULC models have low battery dropout"
+      },
+      {
+        "sku_25v": "4100-1332",
+        "sku_70v": "4100-1333",
+        "input": "220/230/240 VAC 50/60 Hz",
+        "listing": "UL",
+        "description": "Primary 100 W Amplifier; same ratings"
+      },
+      {
+        "sku_25v": "4100-1334",
+        "sku_70v": "4100-1335",
+        "input": "120 VAC 60 Hz",
+        "listing": "UL",
+        "description": "Backup 100 W Amplifier; uses six Class B NACs of primary"
+      },
+      {
+        "sku_25v": "4100-1336",
+        "sku_70v": "4100-1337",
+        "input": "120 VAC 60 Hz",
+        "listing": "ULC",
+        "description": "Backup 100 W Amplifier; uses six Class B NACs of primary; ULC low battery dropout"
+      },
+      {
+        "sku_25v": "4100-1338",
+        "sku_70v": "4100-1339",
+        "input": "220/230/240 VAC 50/60 Hz",
+        "listing": "UL",
+        "description": "Backup 100 W Amplifier; uses six Class B NACs of primary"
+      }
+    ],
+    "Table 21 — Options for Analog or Digital Amplifiers": [
+      {
+        "model": "4100-1245",
+        "description": "Flex-35/50 Expansion NAC Module; adds three Class B audio NACs",
+        "mounting": "Mounts on Flex-35/50",
+        "ratings": "1.5 A, 35/50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "8",
+          "alarm": "60"
+        }
+      },
+      {
+        "model": "4100-1246",
+        "description": "Flex-35/50 Class A Adapter Module; converts three on-board NACs to Class A",
+        "mounting": "Mounts on Flex-35/50",
+        "ratings": "2 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "10",
+          "alarm": "30"
+        }
+      },
+      {
+        "model": "4100-1248",
+        "description": "100 W Amplifier Expansion NAC Module; provides six additional Class B NACs",
+        "mounting": "Mounts on 100 W amplifier",
+        "ratings": "1.5 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "17",
+          "alarm": "60"
+        }
+      },
+      {
+        "model": "4100-1249",
+        "description": "100 W Class A Adapter Module; converts six on-board NACs to Class A",
+        "mounting": "On 100 W amplifier",
+        "ratings": "2 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "1",
+          "alarm": "60"
+        }
+      },
+      {
+        "model": "4100-1259",
+        "description": "Constant Supervision Adapter — 25 VRMS",
+        "ratings": "NAC 2 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "10 on batteries",
+          "alarm": "35"
+        }
+      },
+      {
+        "model": "4100-1260",
+        "description": "Constant Supervision Adapter — 70.7 VRMS",
+        "ratings": "NAC 0.707 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "38",
+          "alarm": "70"
+        }
+      }
+    ],
+    "Table 22 — Audio Expansion Signal Module and Options": [
+      {
+        "model": "4100-5116",
+        "description": "Expansion Signal Module — converts one NAC input to three NAC outputs; selects between two inputs; Flex-35/50 only; up to five max per amp",
+        "ratings": "Three 1.5 A Class B NACs; 1.5 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "20",
+          "alarm": "80"
+        }
+      },
+      {
+        "model": "4100-1266",
+        "description": "NAC Expander for 4100-5116",
+        "ratings": "1.5 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "0.84",
+          "alarm": "60"
+        }
+      },
+      {
+        "model": "4100-1267",
+        "description": "Class A Adapter for 4100-5116",
+        "ratings": "1.5 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "0",
+          "alarm": "30"
+        }
+      },
+      {
+        "model": "4100-1268",
+        "description": "Constant Supervision Adapter for 4100-5116 (25 VRMS or 70.7 VRMS)",
+        "ratings": "1.4 A, 50 W, or 100 speakers max",
+        "currents_mA": {
+          "supv": "38 on batteries (CS deactivated)",
+          "alarm": "70"
+        }
+      }
+    ],
+    "Table 23 — Firefighter Telephone Options": [
+      {
+        "sku": "4100-1272",
+        "description": "Expansion Telephone Control Module; three Class B telephone NACs; required when telephone circuits are in transponder",
+        "size": "1 Block",
+        "currents_mA": {
+          "supv": "80",
+          "in_use": "130"
+        }
+      },
+      {
+        "sku": "4100-1273",
+        "description": "Telephone Class A Adapter Module; mounts on 4100-1272; no additional current"
+      }
+    ],
+    "Table 24 — General Audio Options": [
+      {
+        "model": "4081-9018",
+        "description": "End-of-line resistor harness for 70.7 VRMS NACs; 10 kΩ, 1 W"
+      },
+      {
+        "model": "4100-2320",
+        "description": "Audio Bay-to-Bay Interconnection Harness Kit — one per audio bay addition"
+      },
+      {
+        "model": "4100-0637",
+        "description": "Audio Box Interconnection Harness Kit — one per close-nippled audio cabinet"
+      }
+    ],
+    "Table 25 — Local Mode Controller Selection": [
+      {
+        "sku": "4601-9109",
+        "description": "Local Mode Controller — Surface mount, Red w/ white lettering",
+        "supv_current": "44 mA (normal)",
+        "alarm_current": "44 mA (normal)"
+      },
+      {
+        "sku": "4601-9110",
+        "description": "Local Mode Controller — Flush mount, Beige w/ black lettering",
+        "supv_current": "44 mA (local mode)",
+        "alarm_current": "58 mA (local mode)"
+      },
+      {
+        "sku": "4601-9111",
+        "description": "Local Mode Controller — Surface mount, Beige w/ black lettering",
+        "supv_current": "44 mA (local mode)",
+        "alarm_current": "58 mA (local mode)"
+      }
+    ],
+    "Table 26 — Additional 4100ES Product Reference": [
+      {
+        "subject": "Battery and Battery Cabinet Reference for 4100ES",
+        "datasheet": "S2081-0006"
+      },
+      {
+        "subject": "110 Ah Batteries and Cabinets for 4100ES",
+        "datasheet": "S2081-0012"
+      },
+      {
+        "subject": "Seismic Battery Brackets Reference",
+        "datasheet": "S2081-0019"
+      },
+      {
+        "subject": "4100ES LED/Switch Modules & Printer",
+        "datasheet": "S4100-0032"
+      },
+      {
+        "subject": "4100ES Enclosures",
+        "datasheet": "S4100-0037"
+      },
+      {
+        "subject": "4100ES Basic Panels with ES-PS Power Supplies",
+        "datasheet": "S4100-1031"
+      },
+      {
+        "subject": "NDU with ES-PS Power Supplies for 4120 Network",
+        "datasheet": "S4100-1036"
+      },
+      {
+        "subject": "NDU with ES-PS Power Supplies for ES Net",
+        "datasheet": "S4100-1077"
+      }
+    ]
+  }
+}

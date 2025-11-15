@@ -1,0 +1,807 @@
+{
+  "source_pdf": "SS4100-1031.pdf",
+  "title": "4100ES Fire Control Units — Basic Panel Modules and Accessories",
+  "doc_id": "S4100-1031 Rev. 18 08/2024",
+  "publisher": "Johnson Controls / Simplex",
+  "created_at": "2024-08-01",
+  "compiled_at": "2025-11-15T18:28:36.432820Z",
+  "notes": [
+    "This JSON captures part numbers, descriptions, specs, and tabled data from the datasheet.",
+    "Figure captions from the document are included under 'figures' for picture metadata.",
+    "Numeric ratings are strings as printed; engineering apps may normalize units as needed."
+  ],
+  "figures": [
+    {
+      "page": 1,
+      "figure": "Figure 1",
+      "caption": "4100ES two-bay cabinet with ES Touch Screen Display"
+    },
+    {
+      "page": 2,
+      "figure": "Figure 2",
+      "caption": "4100ES Module Bay reference"
+    },
+    {
+      "page": 3,
+      "figure": "Figure 3",
+      "caption": "ES Touch Screen Display interface"
+    },
+    {
+      "page": 3,
+      "figure": "Figure 4",
+      "caption": "2 x 40 Operator interface"
+    },
+    {
+      "page": 5,
+      "figure": "Figure 5",
+      "caption": "TrueAlert ES addressable appliance reference"
+    },
+    {
+      "page": 7,
+      "figure": "Figure 6",
+      "caption": "TrueAlertES Self-Test report (last test results)"
+    },
+    {
+      "page": 7,
+      "figure": "Figure 7",
+      "caption": "TrueAlertES Self-Test report (all test results)"
+    },
+    {
+      "page": 8,
+      "figure": "Figure 8",
+      "caption": "TrueAlert ES appliance Individual Appliance Report example"
+    },
+    {
+      "page": 9,
+      "figure": "Figure 9",
+      "caption": "ES Touch Screen Display operator interface"
+    },
+    {
+      "page": 11,
+      "figure": "Figure 10-15",
+      "caption": "Example display screens: alarms, menus, troubles, logs, point status"
+    },
+    {
+      "page": 13,
+      "figure": "Figure 16",
+      "caption": "Monochrome 2 x 40 LCD Operator Interface layout"
+    },
+    {
+      "page": 14,
+      "figure": "Figure 17",
+      "caption": "Expansion Bay chassis, block/slot map"
+    },
+    {
+      "page": 15,
+      "figure": "Figure 18",
+      "caption": "Mounting and CPU Bay module reference with dimensions"
+    }
+  ],
+  "tables": {
+    "Table 3 — IDNet/MAPNET/IDNet2 Wiring Common Specifications": [
+      {
+        "spec": "Max Distance (1–125 devices)",
+        "value": "4000 ft (1219 m), 50 Ω"
+      },
+      {
+        "spec": "Max Distance (126–250 devices)",
+        "value": "2500 ft (762 m), 35 Ω"
+      },
+      {
+        "spec": "Connections",
+        "value": "18–12 AWG (0.82–3.31 mm²)"
+      }
+    ],
+    "Table 4 — IDNet and MAPNET II Specifications": [
+      {
+        "spec": "Wire Type (New Install)",
+        "value": "Shielded twisted pair (STP)"
+      },
+      {
+        "spec": "Wire Type (Retrofit)",
+        "value": "Unshielded twisted pair (UTP)"
+      },
+      {
+        "spec": "Total wire length with T-taps (Class B)",
+        "value": "Up to 10,000 ft (3 km), 0.58 μF"
+      }
+    ],
+    "Table 5 — IDNet 2 and IDNet 2+2 Wiring Specifications": [
+      {
+        "spec": "Wire Type (New Install)",
+        "value": "Unshielded twisted pair (UTP)"
+      },
+      {
+        "spec": "Wire Type (Retrofit)",
+        "value": "Shielded or unshielded; twisted or untwisted"
+      },
+      {
+        "spec": "Total wire length with T-taps (Class B)",
+        "value": "Up to 12,500 ft (3.8 km), 0.60 μF"
+      },
+      {
+        "spec": "Max capacitance between channels",
+        "value": "1 μF"
+      },
+      {
+        "compatibility": "IDNet communicating devices and TrueAlarm sensors incl. QuickConnect/QuickConnect2"
+      }
+    ],
+    "Table 6 — IDNAC SLC Appliance Wiring Reference": [
+      {
+        "spec": "Required wire type",
+        "value": "Unshielded twisted pair (UTP)"
+      },
+      {
+        "spec": "Max wire length with T-taps (Class B) per SLC",
+        "value": "10,000 ft (3048 m)"
+      },
+      {
+        "spec": "Max wire length to any appliance",
+        "value": "4000 ft (1219 m)"
+      },
+      {
+        "spec": "Appliance supervisory current (unit load)",
+        "value": "1 unit = 0.8 mA"
+      },
+      {
+        "spec": "Wiring connections",
+        "value": "18–12 AWG (0.82–3.31 mm²)"
+      },
+      {
+        "spec": "Capacity",
+        "value": "Up to 127 addresses; up to 139 unit loads"
+      },
+      {
+        "reference": "Installation Instructions 579-1015"
+      }
+    ],
+    "Table 8 — General ES Touch Screen Display Specifications": [
+      {
+        "spec": "Resolution",
+        "value": "800 x 600 pixels (RGB)"
+      },
+      {
+        "spec": "Size/Type",
+        "value": "8 in (203 mm) color touch screen; resistive"
+      },
+      {
+        "spec": "Event display",
+        "value": "Up to 8 events without scrolling"
+      },
+      {
+        "spec": "Watermark file format",
+        "value": "680x484 BMP/JPG/TIFF/GIF/PNG"
+      },
+      {
+        "spec": "Environment",
+        "value": "32°F–120°F (0°C–49°C); ≤93% RH @ 90°F (32°C), non-condensing"
+      }
+    ],
+    "Table 9 — Expansion Bay Loading Reference": [
+      {
+        "module": "IDNet 2 / IDNet 2+2",
+        "mounting": "1 Block"
+      },
+      {
+        "module": "Four 2 A Relays",
+        "mounting": "1 Block"
+      },
+      {
+        "module": "Four 10 A Relays",
+        "mounting": "4 in., 2 Slots"
+      },
+      {
+        "module": "Eight 3 A Relays (NON power-limited)",
+        "mounting": "1 Block"
+      },
+      {
+        "module": "VESDA Interface",
+        "mounting": "2 in., 1 Slot"
+      },
+      {
+        "module": "Class B IDC",
+        "mounting": "2 in., 1 Slot"
+      },
+      {
+        "module": "Class A IDC",
+        "mounting": "2 in., 1 Slot"
+      },
+      {
+        "module": "MAPNET II Module",
+        "mounting": "4 in., 2 Slots"
+      },
+      {
+        "module": "MAPNET II/IDNet Isolator",
+        "mounting": "2 in., 1 Slot"
+      },
+      {
+        "module": "NAC Card",
+        "mounting": "1 Block"
+      },
+      {
+        "module": "IDNAC Card",
+        "mounting": "2 Blocks on ES-PS only (Blocks G/H)"
+      },
+      {
+        "module": "ES-PS configured as backup",
+        "mounting": "Blocks E/F ONLY"
+      },
+      {
+        "module": "ES-XPS",
+        "mounting": "2 Blocks"
+      }
+    ],
+    "Table 10 — ES Power Supply Specifications (ES-PS & ES-XPS)": [
+      {
+        "spec": "AC input",
+        "value": "120–240 VAC; 120 VAC 3.72 A; 220–240 VAC 1.82 A"
+      },
+      {
+        "spec": "Total DC output (no fan)",
+        "value": "9.5 A"
+      },
+      {
+        "spec": "Total DC output with fan + IDNAC",
+        "value": "9.7 A"
+      },
+      {
+        "spec": "Total DC output with fan (no IDNAC)",
+        "value": "12.7 A"
+      },
+      {
+        "spec": "With Reg. 24V appliance loads",
+        "value": "5.0 A"
+      },
+      {
+        "spec": "Aux power tap",
+        "value": "2 A max (from total)"
+      },
+      {
+        "spec": "NACs as aux power",
+        "value": "3 A each; 5 A total (from total)"
+      },
+      {
+        "spec": "Battery charger (ES-PS only)",
+        "value": "Sealed lead-acid; up to 110 Ah (remote if >50 Ah)"
+      },
+      {
+        "spec": "Environment",
+        "value": "32°F–120°F (0°C–49°C); ≤93% RH @ 90°F"
+      }
+    ],
+    "Table 11 — 4100ES Master Controller Selection": [
+      {
+        "model": "4100-9701",
+        "description": "ES-PS Master Controller with 2x40 Display (English)",
+        "listings": "UL/ULC"
+      },
+      {
+        "model": "4100-9702",
+        "description": "ES-PS Master Controller with 2x40 Display (Canadian French)",
+        "listings": "ULC"
+      },
+      {
+        "model": "4100-9706",
+        "description": "ES-PS Master Controller with Color ES Touch Screen Display",
+        "listings": "UL/ULC, CSFM"
+      },
+      {
+        "model": "4100-9709",
+        "description": "ES-PS Master Controller without Display (English)",
+        "listings": "UL/ULC"
+      }
+    ],
+    "Table 12 — Master Controller Upgrades": [
+      {
+        "model": "4100-7150",
+        "panel_type": "1000 pt 4100 (4100+)",
+        "includes": "New MC CPU card; 4100ES door w/ 2x40 LCD; Ethernet"
+      },
+      {
+        "model": "4100-7152",
+        "panel_type": "512 pt 4100",
+        "includes": "Same as 4100-7150 + Universal Power Supply"
+      },
+      {
+        "model": "4100-7158",
+        "panel_type": "4100U or 1000 pt 4100 upgraded to 4100U",
+        "includes": "New MC CPU card with Ethernet (no door UI)"
+      },
+      {
+        "model": "4100-7162",
+        "panel_type": "1000 pt 4100 (4100+)",
+        "includes": "New MC CPU + ES Touch Screen door (>= v6.01)"
+      },
+      {
+        "model": "4100-7163",
+        "panel_type": "4100+ cabinet w/ New MC CPU",
+        "includes": "ES Touch Screen door only (>= v6.01)"
+      },
+      {
+        "model": "4100-7164",
+        "panel_type": "2000 pt 4100 (4100U)",
+        "includes": "New MC CPU + ES Touch Screen door (>= v6.01)"
+      }
+    ],
+    "Table 13 — ES Touch Screen Display Upgrade Kit": [
+      {
+        "model": "4100-7165",
+        "panel_type": "4100ES or 4010ES",
+        "description": "New ES Touch Screen UI replacing 2x40/InfoAlarm"
+      }
+    ],
+    "Table 14 — Master Controller Accessories": [
+      {
+        "model": "4100-2300",
+        "description": "Expansion Bay Assembly"
+      },
+      {
+        "model": "4100-2303",
+        "description": "Legacy Module Stabilizer Bracket"
+      },
+      {
+        "model": "4100-2301",
+        "description": "Expansion Bay upgrade kit for 4x5 modules (note: may require 4100-0620 TIC)"
+      }
+    ],
+    "Table 15 — Communication Modules": [
+      {
+        "model": "4100-1291",
+        "description": "Un-isolated RUI module",
+        "size": "1 Slot"
+      },
+      {
+        "model": "4100-6031",
+        "description": "City circuit, with disconnect switches"
+      },
+      {
+        "model": "4100-6032",
+        "description": "City circuit, without disconnect switches"
+      },
+      {
+        "model": "4100-6033",
+        "description": "Alarm Relay, three Form C (2 A @ 32 VDC) — ES-PS only",
+        "size": "1 Block"
+      },
+      {
+        "model": "4100-6038",
+        "description": "Dual Port RS-232 w/ 2120 interface",
+        "size": "1 Slot"
+      },
+      {
+        "model": "4100-6048",
+        "description": "VESDA Aspiration System Interface",
+        "size": "1 Slot"
+      },
+      {
+        "model": "4100-6080",
+        "description": "DACT, point/event reporting (side mount)"
+      }
+    ],
+    "Table 16 — Connected Services Gateway": [
+      {
+        "model": "4100-2504",
+        "mount": "Side mount",
+        "size": "1 Slot"
+      },
+      {
+        "model": "4100-2506",
+        "mount": "Vertical mount",
+        "size": "2 Blocks"
+      }
+    ],
+    "Table 17 — ES Power Supplies": [
+      {
+        "model": "4100-5401",
+        "voltage": "120–240 V 50/60 Hz",
+        "type": "ES-PS",
+        "includes": "Aux Relay, 2 A Tap/Simple NAC, 110 Ah charger, 2 PDI Blocks",
+        "provides_power_to_bay": "Yes",
+        "size": "2 Blocks"
+      },
+      {
+        "model": "4100-5402",
+        "voltage": "120–240 V 50/60 Hz",
+        "type": "ES-XPS",
+        "includes": "Same as ES-PS except NO charger",
+        "provides_power_to_bay": "No",
+        "size": "2 Blocks",
+        "supv_current": "68 mA",
+        "alarm_current": "77 mA"
+      }
+    ],
+    "Table 18 — Power Supply Accessories": [
+      {
+        "model": "4100-5152",
+        "description": "12 VDC Power Option, 2 A max",
+        "size": "1 Block"
+      },
+      {
+        "model": "4100-0156",
+        "description": "8 VDC Converter, for multiple Physical Bridge Modules, 3 A max",
+        "size": "1 Block"
+      },
+      {
+        "model": "4100-5130",
+        "description": "Voltage Regulator Module, 22.8–26.4 VDC (25 V nominal), isolated/resettable; earth detect + trouble relay",
+        "size": "1 Block"
+      },
+      {
+        "model": "4100-5131",
+        "description": "ES-PS Fan Module",
+        "note": "Allows multiple PS per bay & may increase capacity"
+      },
+      {
+        "model": "4100-0636",
+        "description": "Box Interconnection Harness Kit (non-audio)"
+      },
+      {
+        "model": "4100-0638",
+        "description": "4100 Slot Module Additional 24 VDC Harness"
+      },
+      {
+        "model": "4100-5403",
+        "description": "Harness for ES-PS Backup Power Supply"
+      },
+      {
+        "model": "4100-0644/0645/0646/0647",
+        "description": "PDM Harness for 120/220/230/240 VAC — one per PS"
+      }
+    ],
+    "Table 19 — Notification Appliance Modules": [
+      {
+        "model": "4100-5450",
+        "description": "Conventional NAC Module",
+        "outputs": "Three 3 A NACs",
+        "size": "1 Block",
+        "max_load_special_app": "3.0 A/NAC; 9.0 A/Card",
+        "max_load_reg_24v": "2.0 A/NAC; 5.0 A/Card",
+        "current_draw": {
+          "supv": "66 mA",
+          "alarm": "66 mA"
+        }
+      },
+      {
+        "model": "4100-5451",
+        "description": "IDNAC Addressable Notification SLC Module",
+        "outputs": "Three 3 A SLCs",
+        "size": "2 Blocks (ES-PS only)",
+        "max_load_special_app": "3.0 A/NAC; 9.0 A/Card",
+        "max_load_reg_24v": "N/A",
+        "current_draw": {
+          "supv": "124 mA",
+          "alarm": "230 mA"
+        }
+      }
+    ],
+    "Table 20 — Dual Class A IDNAC Isolator": [
+      {
+        "model": "4100-6103",
+        "description": "Converts one Class B IDNAC SLC to two Class A outputs; short-circuit isolation between outputs; up to 2 per SLC (max 6 per IDNAC SLC)",
+        "addresses": "Each isolated output uses one IDNAC address; up to 30 device addresses per isolated loop",
+        "current_draw": {
+          "supv": "8.3 mA",
+          "alarm": "18.5 mA"
+        }
+      }
+    ],
+    "Table 21 — 8-Point Zone/Relay Card": [
+      {
+        "model": "4100-5013",
+        "description": "8-point zone/relay 4x5 module; eight Class B or four Class A IDCs",
+        "size": "1 Block",
+        "current_draw": {
+          "supv": "83 mA",
+          "alarm": "295 mA"
+        }
+      },
+      {
+        "model": "4100-6305",
+        "description": "25 V regulator harness for 8 point zone/relay module",
+        "size": "N/A"
+      }
+    ],
+    "Table 22 — IDNet Addressable Interface Modules": [
+      {
+        "model": "4100-3109 / 4100-3117",
+        "description": "IDNet 2 Module, 250 point; isolated; two short-circuit isolating loops; 1 block (standard on ES-PS w/ IDNet2)",
+        "device_currents": {
+          "none": {
+            "supv": "50 mA",
+            "alarm": "60 mA"
+          },
+          "50": {
+            "supv": "90 mA",
+            "alarm": "150 mA"
+          },
+          "125": {
+            "supv": "150 mA",
+            "alarm": "225 mA"
+          },
+          "250": {
+            "supv": "250 mA",
+            "alarm": "350 mA"
+          }
+        }
+      },
+      {
+        "model": "4100-3110",
+        "description": "IDNet 2+2 Module, 250 point; isolated; four short-circuit isolating loops; 1 block",
+        "device_currents": {
+          "none": {
+            "supv": "50 mA",
+            "alarm": "60 mA"
+          },
+          "50": {
+            "supv": "90 mA",
+            "alarm": "150 mA"
+          },
+          "125": {
+            "supv": "150 mA",
+            "alarm": "225 mA"
+          },
+          "250": {
+            "supv": "250 mA",
+            "alarm": "350 mA"
+          }
+        }
+      },
+      {
+        "model": "4100-3111",
+        "description": "IDNet Short Circuit Isolating Loop Output Module (field add-on; up to two per 4100-3109/-3117)"
+      }
+    ],
+    "Table 23 — Current Draw per IDNet Device": [
+      {
+        "condition": "Standby",
+        "current": "0.8 mA"
+      },
+      {
+        "condition": "Alarm, LED off",
+        "current": "1.0 mA"
+      },
+      {
+        "condition": "Alarm, LED on",
+        "current": "3.0 mA",
+        "note": "Max 20 device LEDs on per channel"
+      }
+    ],
+    "Table 24 — MAPNET Addressable Interface Modules": [
+      {
+        "model": "4100-3102",
+        "description": "MAPNET II Module, 127 points (2 Slots); each device 1.7 mA",
+        "module_currents": {
+          "module_only": {
+            "supv": "255 mA",
+            "alarm": "275 mA"
+          },
+          "fully_loaded": {
+            "supv": "471 mA",
+            "alarm": "491 mA"
+          }
+        }
+      },
+      {
+        "model": "4100-3103",
+        "description": "MAPNET II Isolator Module; converts SLC to four isolated outputs (Class A/B); 1 Slot",
+        "currents": {
+          "supv": "50 mA",
+          "alarm": "50 mA"
+        },
+        "compatibility": "MAPNET II Remote Isolators only"
+      }
+    ],
+    "Table 25 — Relay Modules (Non Power-Limited)": [
+      {
+        "model": "4100-3207",
+        "description": "Four DPDT with feedback",
+        "resistive_ratings": "2 A @ 30 VDC/30 VAC",
+        "inductive_ratings": "0.5 A @ 30 VDC / 120 VAC",
+        "size": "1 Block",
+        "currents": {
+          "supv": "18 mA",
+          "alarm": "65 mA"
+        }
+      },
+      {
+        "model": "4100-3208",
+        "description": "Four DPDT with feedback",
+        "resistive_ratings": "10 A @ 30 VDC/120/240 VAC",
+        "inductive_ratings": "10 A @ 30 VDC/120/240 VAC",
+        "size": "2 Slots",
+        "currents": {
+          "supv": "20 mA",
+          "alarm": "188 mA"
+        }
+      },
+      {
+        "model": "4100-3209",
+        "description": "Eight SPDT",
+        "resistive_ratings": "3 A @ 30 VDC / 120 VAC",
+        "inductive_ratings": "1.5 A @ 30 VDC / 120 VAC",
+        "size": "1 Block",
+        "currents": {
+          "supv": "16 mA",
+          "alarm": "200 mA"
+        }
+      }
+    ],
+    "Table 26 — Miscellaneous Accessories": [
+      {
+        "model": "4100-1279",
+        "description": "Single blank 2 in. display cover (4100-2302 for full bay)"
+      },
+      {
+        "model": "4100-9856",
+        "description": "4100ES Canadian French Appliqué Kit"
+      },
+      {
+        "model": "4100-9857",
+        "description": "4100ES English Appliqué Kit"
+      },
+      {
+        "model": "4100-9858",
+        "description": "4100ES InfoAlarm Remote Display English Appliqué Kit"
+      },
+      {
+        "model": "4100-9869",
+        "description": "Special Purpose Appliqué Kit — Sprinkler Waterflow & Supervisory Station"
+      },
+      {
+        "model": "4100-9835",
+        "description": "Termination & Address Label Kit (module marking)"
+      },
+      {
+        "model": "4100-6034",
+        "description": "Tamper Switch (built-in IDNet IAM)"
+      },
+      {
+        "model": "2081-9031",
+        "description": "Series resistor for WSO/IDCs (470 Ω, 1 W)"
+      }
+    ],
+    "Table 27 — Additional Product References (Datasheets)": [
+      {
+        "subject": "Serial DACT (SDACT) for 4100ES, 4010ES, 4007ES",
+        "datasheet": "S2080-0009"
+      },
+      {
+        "subject": "Connected Services Gateway - Central Station Communication and SafeLINC Cloud Services",
+        "datasheet": "S2080-0091"
+      },
+      {
+        "subject": "Battery and Battery Cabinet Reference for 4100ES",
+        "datasheet": "S2081-0006"
+      },
+      {
+        "subject": "110 Ah Batteries and Cabinets for 4100ES",
+        "datasheet": "S2081-0012"
+      },
+      {
+        "subject": "4009 IDNet NAC Extender",
+        "datasheet": "S4009-0002"
+      },
+      {
+        "subject": "4009 IDNAC Repeater",
+        "datasheet": "S4009-0004"
+      },
+      {
+        "subject": "External 110 Ah Battery Charger for 4100ES, 4010ES",
+        "datasheet": "S4081-0002"
+      },
+      {
+        "subject": "IDNet Isolator2",
+        "datasheet": "S4090-0017"
+      },
+      {
+        "subject": "IDNet Isolator2 Base",
+        "datasheet": "S4098-0026"
+      },
+      {
+        "subject": "Graphic I/O Modules for 4100ES, 4010ES, 4007ES",
+        "datasheet": "S4100-0005"
+      },
+      {
+        "subject": "Interface to VESDA Air Aspiration Detection Systems",
+        "datasheet": "S4100-0026"
+      },
+      {
+        "subject": "4100ES LED/Switch Modules and Printer",
+        "datasheet": "S4100-0032"
+      },
+      {
+        "subject": "Master Clock Interface",
+        "datasheet": "S4100-0033"
+      },
+      {
+        "subject": "4100ES Enclosures",
+        "datasheet": "S4100-0037"
+      },
+      {
+        "subject": "4100ES Extinguishing Release Applications",
+        "datasheet": "S4100-0040"
+      },
+      {
+        "subject": "TFX Interface Module",
+        "datasheet": "S4100-0042"
+      },
+      {
+        "subject": "2120 BMUX Module",
+        "datasheet": "S4100-0048"
+      },
+      {
+        "subject": "Multiple Signal Fiber Optic Modems for 4120 Networks",
+        "datasheet": "S4100-0049"
+      },
+      {
+        "subject": "BACpac Ethernet Module",
+        "datasheet": "S4100-0051"
+      },
+      {
+        "subject": "4120 Network Products and Specifications",
+        "datasheet": "S4100-0056"
+      },
+      {
+        "subject": "Building Network Interface Card (BNIC)",
+        "datasheet": "S4100-0061"
+      },
+      {
+        "subject": "SafeLINC Internet Interface",
+        "datasheet": "S4100-0062"
+      },
+      {
+        "subject": "Emergency Voice/Alarm Communications Equipment with ES-PS Power Supplies",
+        "datasheet": "S4100-1034"
+      },
+      {
+        "subject": "MINIPLEX Transponders with ES-PS Power Supplies",
+        "datasheet": "S4100-1035"
+      },
+      {
+        "subject": "NDU with ES-PS Power Supplies for 4120 Network",
+        "datasheet": "S4100-1036"
+      },
+      {
+        "subject": "4100ES Remote Annunciator Panels with ES-PS Power Supplies",
+        "datasheet": "S4100-1039"
+      },
+      {
+        "subject": "Remote ES Touch Screen Displays for 4100ES and 4010ES Panels",
+        "datasheet": "S4100-1070"
+      },
+      {
+        "subject": "ES Net Network Products and Specifications",
+        "datasheet": "S4100-1076"
+      },
+      {
+        "subject": "NDU with ES-PS Power Supplies for ES Net",
+        "datasheet": "S4100-1077"
+      },
+      {
+        "subject": "TrueSite Workstation",
+        "datasheet": "S4190-0016"
+      },
+      {
+        "subject": "TrueSite Incident Commander",
+        "datasheet": "S4190-0020"
+      },
+      {
+        "subject": "Network System Integrator (NSI) for ES Net and 4120 Networks",
+        "datasheet": "S4190-0026"
+      },
+      {
+        "subject": "24-Pin Dot Matrix Fire Alarm System Remote Printer",
+        "datasheet": "S4190-0027"
+      },
+      {
+        "subject": "SCU/RCU Annunciators for 4007ES, 4010ES, 4100ES",
+        "datasheet": "S4602-0001"
+      },
+      {
+        "subject": "LCD Annunciator for 4100ES",
+        "datasheet": "S4603-0001"
+      }
+    ]
+  }
+}
