@@ -1,0 +1,1877 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/QA_TO_CPSAT_COMPLETE_GUIDE.md b/QA_TO_CPSAT_COMPLETE_GUIDE.md
+index e6283786d63b71ee21d65930aaf87ed2634990e7..8aecbfe294ba3934c537b813f33d009bb92caf09 100644
+--- a/QA_TO_CPSAT_COMPLETE_GUIDE.md
++++ b/QA_TO_CPSAT_COMPLETE_GUIDE.md
+@@ -93,60 +93,72 @@ Processing:
+ Output: [panel1_boq, panel2_boq, panel3_boq]
+ 
+ STEP 5: CREATE PANEL CONFIGURATIONS
+ =====================================
+ Input: panel_boqs[], constraints
+ Processing:
+   → For each panel:
+       - Assign unique panel_id
+       - Attach BOQ
+       - Attach constraints
+       - Mark as main panel
+ Output: List of PanelConfiguration objects
+ 
+ STEP 6: CREATE ANNUNCIATOR CONFIGS
+ ===================================
+ Input: Q35 answer, total_boq.remote_annunciator
+ Processing:
+   → If Q35 == "yes":
+       - Create separate 4100ES config
+       - Panel type: remote_annunciator_with_incident_commander
+       - Include audio control modules
+   → For each standard annunciator:
+       - Create basic remote annunciator config
+ Output: Additional PanelConfiguration objects
+ 
+-STEP 7: EXPORT FOR CP-SAT
++STEP 7: EVALUATE RULE ENGINE & PRICE OPTIMISATION
++=================================================
++Input: ProjectAnswers, panel-level DeviceBOQ, Excel rule workbooks
++Processing:
++  → Load module catalogue from `4100ES_All_Modules_Complete MX rev2.xlsx`
++  → Parse placement constraints from `4100ES Overview of Placement Rules.xlsx`
++  → Derive category requirements (Master Controller, Power Supplies, Audio, etc.)
++    based on Q&A answers and BOQ quantities
++  → Build CP-SAT optimisation (if OR-Tools available) with price objective
++  → Fall back to greedy selection when solver not installed
++Output: Estimated cost, selected module counts, per-category requirements
++
++STEP 8: EXPORT FOR CP-SAT
+ ==========================
+ Input: All PanelConfiguration objects
+ Processing:
+   → Convert DeviceBOQ to dict
+   → Format constraints
+-  → Create (boq, constraints) tuples
+-Output: [(boq1, constraints1), (boq2, constraints2), ...]
++  → Include optimisation metadata (category requirements, module selection)
++Output: [(boq1, constraints1, modules1, categories1), ...]
+ 
+-STEP 8: RUN CP-SAT OPTIMIZER
++STEP 9: RUN CP-SAT OPTIMIZER
+ ==============================
+ Input: For each panel: (boq, constraints)
+ Processing:
+   → CP-SAT determines optimal configuration
+   → Selects modules, power supplies, layout
+   → Validates against rules
+ Output: Optimized panel configuration with BOM
+ ```
+ 
+ ---
+ 
+ ## Q&A Excel Processing
+ 
+ ### Question Mapping Table
+ 
+ | Q# | Question Topic | Answer Type | Derived Constraint | CP-SAT Field |
+ |----|----------------|-------------|-------------------|--------------|
+ | 2 | Short-circuit isolator | yes/no | protocol = MX if yes | `protocol`, `prefer_mx` |
+ | 3 | Soft-addressable | yes/no | protocol = MX if yes | `protocol`, `prefer_mx` |
+ | 4 | Isolator in each device | yes/no | protocol = MX if yes | `protocol`, `prefer_mx` |
+ | 5 | Loop powered sounder | yes/no | protocol = MX if yes | `protocol`, `prefer_mx` |
+ | 6 | Detection & notification same loop | yes/no | protocol = MX if yes | `protocol`, `prefer_mx` |
+ | 7 | No separate notification wiring | yes/no | protocol = MX if yes | `protocol`, `prefer_mx` |
+ | 8 | Voice evacuation + speakers | yes/no | audio_type = voice_evac | `voice_evacuation` |
+ | 9 | Speakers but no voice | yes/no | Select non-audio panel | `voice_evacuation=False` |
+@@ -798,46 +810,50 @@ Format: Python tuple
+ Structure: (boq_dict, constraints_dict)
+ Usage: optimizer.optimize_configuration(boq_dict, constraints_dict)
+ ```
+ 
+ ---
+ 
+ ## Conclusion
+ 
+ ### What You Need to Provide
+ 
+ 1. **Q&A Excel with Answers** - Fill in the answer column
+ 2. **Total Device BOQ** - From project drawings/specs
+ 3. **Number of Panels** - How many main panels
+ 
+ ### What the System Handles
+ 
+ 1. ✅ Parse and validate Q&A answers
+ 2. ✅ Determine protocol (IDNet2 vs MX)
+ 3. ✅ Determine panel series (4100ES vs 4007ES vs 4010ES)
+ 4. ✅ Configure audio system
+ 5. ✅ Divide BOQ across multiple panels
+ 6. ✅ Create separate remote annunciator configs
+ 7. ✅ Format everything for CP-SAT
+ 8. ✅ Run CP-SAT optimizer for each panel
+ 9. ✅ Generate complete BOM and layout
++10. ✅ Report internal back-plane blocks vs. door-mounted slot usage for every optimised panel
++11. ✅ Auto-select matching 4100ES backboxes and solid/glass doors (plus amplifier redundancy) based on bay demand and door-mounted modules
++
++Each panel configuration exported to JSON now includes a `space_usage` block with the total internal blocks and door slots consumed by the recommended modules, along with a `bay_allocation` summary that highlights the minimum bays required to satisfy both planes. This mirrors the 4100ES placement guidelines and ensures that mixed modules such as audio microphone stations and firefighter telephones that span both planes are budgeted correctly.
+ 
+ ### File Structure in Your Project
+ 
+ ```
+ project/
+ ├── QandA_for_Panel.xlsx                    # User fills this
+ ├── qanda_processor.py                      # Processes Q&A
+ ├── multi_panel_handler.py                  # Handles multi-panel
+ ├── cpsat_4100es_optimizer_v2.py           # CP-SAT engine
+ ├── component_database.py                   # Module definitions
+ ├── placement_rules.py                      # Excel rules encoded
+ └── main.py                                 # Orchestrates everything
+ 
+ Workflow:
+ 1. User fills Q&A Excel
+ 2. User provides BOQ + num_panels
+ 3. Run: python main.py
+ 4. Output: Optimized configs for each panel
+ ```
+ 
+ **The system is now complete and ready to use!**
+ 
+EOF
+)
+
+
+
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/cp_sat_rule_engine.py b/cp_sat_rule_engine.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8cd3a1e2098a6a34da0b478440f1ad3aecfa3c3a
+--- /dev/null
++++ b/cp_sat_rule_engine.py
+@@ -0,0 +1,1098 @@
++"""Rule engine that interprets workbook guidance and builds CP-SAT models."""
++from __future__ import annotations
++
++import json
++import math
++import os
++import re
++from dataclasses import dataclass, field
++from typing import Dict, Iterable, List, Optional, Set, Tuple
++
++from excel_reader import SheetData, XLSXReader
++
++try:  # Optional dependency; solver not available during tests but code must run.
++    from ortools.sat.python import cp_model
++except Exception:  # pragma: no cover - handled gracefully at runtime
++    cp_model = None  # type: ignore
++
++
++# ---------------------------------------------------------------------------
++# Data structures representing workbook content
++# ---------------------------------------------------------------------------
++
++
++@dataclass
++class ModuleDefinition:
++    """Represents a module entry from the 4100ES module workbook."""
++
++    model_number: str
++    description: str
++    compatible_panels: List[str]
++    compatible_protocols: List[str]
++    total_point_capacity: Optional[str]
++    circuit_capacity: Optional[str]
++    supervisory_current: Optional[float]
++    alarm_current: Optional[float]
++    supported_speakers: Optional[str]
++    circuits: Optional[str]
++    compulsory_main_modules: List[str]
++    module_role: str
++    physical_size: str
++    mounted_on: str
++    dependencies: List[str]
++    specification_categories: List[str]
++    keywords: List[str]
++    price: float = 0.0
++    internal_space: float = 0.0
++    door_space: float = 0.0
++
++    def matches_keyword(self, keyword: str) -> bool:
++        keyword_lower = keyword.lower()
++        haystacks = [
++            self.description.lower(),
++            " ".join(self.specification_categories).lower(),
++            " ".join(self.keywords).lower(),
++        ]
++        return any(keyword_lower in haystack for haystack in haystacks)
++
++    @property
++    def block_count(self) -> float:
++        if self.internal_space or self.door_space:
++            return self.internal_space + self.door_space
++        if not self.physical_size:
++            return 0.0
++        size_lower = self.physical_size.lower()
++        digits = "".join(ch for ch in size_lower if ch.isdigit() or ch == ".")
++        try:
++            return float(digits) if digits else 0.0
++        except ValueError:
++            return 0.0
++
++
++@dataclass
++class PlacementRule:
++    """Human-readable placement rule extracted from overview workbook."""
++
++    path: Tuple[str, ...]
++    text: str
++
++
++@dataclass
++class PanelRequirements:
++    """Summarised requirements derived from Q&A answers and project BOQ."""
++
++    protocol: str
++    voice_evacuation: bool
++    prefer_addressable_nac: bool
++    has_fire_phone: bool
++    has_led_switches: bool
++    has_smoke_management: bool
++    has_door_holder_220vac: bool
++    monitor_leds: bool
++    graphics_control: bool
++    speaker_wattage: float
++    speaker_count: int
++    fire_phone_circuits: int
++    nac_circuits_required: int
++    slc_loops_required: int
++    relay_count: int
++    loop_device_count: int
++    nac_device_count: int
++    idnet_modules_required: int
++    requires_printer: bool
++    requires_network_cards: bool
++    network_links: int
++    nac_class_a: bool
++    speaker_class_a: bool
++    constant_supervision: bool
++    requires_led_packages: bool
++    fire_damper_control: bool
++    dual_amplifier_per_zone: bool
++    backup_amp_one_to_one: bool
++    backup_amp_one_for_all: bool
++
++
++@dataclass
++class OptimizationResult:
++    """Result returned by the rule engine for a single panel."""
++
++    category_requirements: Dict[str, int]
++    module_selection: Dict[str, int]
++    estimated_cost: float
++    solver_status: str
++    space_usage: Dict[str, float]
++    bay_allocation: Dict[str, int]
++
++
++class RuleRepository:
++    """Loads module metadata, placement rules, and pricing overrides."""
++
++    def __init__(
++        self,
++        module_workbook: str,
++        placement_workbook: str,
++        pricing_overrides: Optional[str] = None,
++    ) -> None:
++        self.module_workbook = module_workbook
++        self.placement_workbook = placement_workbook
++        self.modules: List[ModuleDefinition] = []
++        self.placement_rules: List[PlacementRule] = []
++        self.category_to_modules: Dict[str, List[ModuleDefinition]] = {}
++        self.module_index: Dict[str, ModuleDefinition] = {}
++        self.module_prices: Dict[str, float] = {}
++        self.category_prices: Dict[str, float] = {}
++        self._load_pricing_overrides(pricing_overrides)
++        self._load_modules()
++        self._load_placement_rules()
++
++    # ------------------------------------------------------------------
++    def _load_pricing_overrides(self, pricing_path: Optional[str]) -> None:
++        if pricing_path and os.path.exists(pricing_path):
++            with open(pricing_path, "r", encoding="utf-8") as handle:
++                data = json.load(handle)
++            self.module_prices = {
++                key: float(value) for key, value in data.get("module_overrides", {}).items()
++            }
++            self.category_prices = {
++                key: float(value)
++                for key, value in data.get("category_defaults", {}).items()
++            }
++        else:
++            # Provide conservative defaults that encourage minimal selections.
++            self.category_prices = {
++                "Master Controller": 4500.0,
++                "Power Supplies": 1200.0,
++                "EPS & Accessories": 1600.0,
++                "IDNet Modules": 950.0,
++                "Notification Modules": 900.0,
++                "Audio Options (S4100-0104)": 1800.0,
++                "Telephone (S4100-0104)": 750.0,
++                "LED-Switch (4100-0032)": 650.0,
++                "Relay Modules": 500.0,
++                "VCC Interfaces (S4100-0104)": 900.0,
++            }
++
++    # ------------------------------------------------------------------
++    def _load_modules(self) -> None:
++        reader = XLSXReader(self.module_workbook)
++        sheet = reader.read_sheet()
++        module_lookup: Dict[str, ModuleDefinition] = {}
++
++        for record in sheet.records():
++            model_number = record.get("Module Model Number", "").strip()
++            if not model_number:
++                continue
++
++            description = record.get("Description", "").strip()
++            compatible_panels = [
++                value.strip()
++                for value in record.get("compatible with Panel", "").split(",")
++                if value.strip()
++            ]
++            compatible_protocols = [
++                value.strip()
++                for value in record.get("compatible with Protocol", "").split(",")
++                if value.strip()
++            ]
++            total_point_capacity = record.get("Total Point Capacity Possible") or None
++            circuit_capacity = record.get("Point Capacity / Circuit Capacity") or None
++            supervisory_current = _safe_float(record.get("Supervisory Current", ""))
++            alarm_current = _safe_float(record.get("Alarm Current", ""))
++            supported_speakers = record.get("Supports which Speakers") or None
++            circuits = record.get("Circuits/Points") or None
++            compulsory_main = [
++                value.strip()
++                for value in record.get("Possible Compulsory Main Modules", "").split(",")
++                if value.strip()
++            ]
++            module_role = record.get("Is it Main module or sub-module mounted on main", "").strip()
++            physical_size = record.get("Physical Size", "").strip()
++            mounted_on = record.get("Mounted ON", "").strip()
++            dependencies = [
++                value.strip()
++                for value in record.get("Another Module needed to function", "").split(",")
++                if value.strip()
++            ]
++            spec_categories = [
++                value.strip()
++                for value in record.get("Specification Descriptions", "").split(",")
++                if value.strip()
++            ]
++            keywords = [
++                value.strip()
++                for value in record.get("Keywords associated with the module", "").split(",")
++                if value.strip()
++            ]
++
++            price = self.module_prices.get(model_number)
++            if price is None and spec_categories:
++                price = self.category_prices.get(spec_categories[0], 0.0)
++            if price is None:
++                price = 0.0
++
++            internal_space, door_space = _derive_space_requirements(
++                model_number, physical_size, mounted_on
++            )
++
++            if model_number in module_lookup:
++                module = module_lookup[model_number]
++                if description and not module.description:
++                    module.description = description
++                module.compatible_panels = _merge_unique(
++                    module.compatible_panels, compatible_panels
++                )
++                module.compatible_protocols = _merge_unique(
++                    module.compatible_protocols, compatible_protocols
++                )
++                if total_point_capacity and not module.total_point_capacity:
++                    module.total_point_capacity = total_point_capacity
++                if circuit_capacity and not module.circuit_capacity:
++                    module.circuit_capacity = circuit_capacity
++                if supervisory_current is not None and module.supervisory_current is None:
++                    module.supervisory_current = supervisory_current
++                if alarm_current is not None and module.alarm_current is None:
++                    module.alarm_current = alarm_current
++                if supported_speakers and not module.supported_speakers:
++                    module.supported_speakers = supported_speakers
++                if circuits and not module.circuits:
++                    module.circuits = circuits
++                module.compulsory_main_modules = _merge_unique(
++                    module.compulsory_main_modules, compulsory_main
++                )
++                module.dependencies = _merge_unique(module.dependencies, dependencies)
++                module.specification_categories = _merge_unique(
++                    module.specification_categories, spec_categories
++                )
++                module.keywords = _merge_unique(module.keywords, keywords)
++                if not module.module_role:
++                    module.module_role = module_role
++                if not module.physical_size:
++                    module.physical_size = physical_size
++                if not module.mounted_on:
++                    module.mounted_on = mounted_on
++                if module.price <= 0 and price > 0:
++                    module.price = price
++                module.internal_space = max(module.internal_space, internal_space)
++                module.door_space = max(module.door_space, door_space)
++                continue
++
++            module_lookup[model_number] = ModuleDefinition(
++                model_number=model_number,
++                description=description,
++                compatible_panels=compatible_panels,
++                compatible_protocols=compatible_protocols,
++                total_point_capacity=total_point_capacity,
++                circuit_capacity=circuit_capacity,
++                supervisory_current=supervisory_current,
++                alarm_current=alarm_current,
++                supported_speakers=supported_speakers,
++                circuits=circuits,
++                compulsory_main_modules=compulsory_main,
++                module_role=module_role,
++                physical_size=physical_size,
++                mounted_on=mounted_on,
++                dependencies=dependencies,
++                specification_categories=spec_categories,
++                keywords=keywords,
++                price=price,
++                internal_space=internal_space,
++                door_space=door_space,
++            )
++
++        for synthetic in SYNTHETIC_MODULES:
++            if synthetic.model_number in module_lookup:
++                existing = module_lookup[synthetic.model_number]
++                if existing.price <= 0 and synthetic.price > 0:
++                    existing.price = synthetic.price
++                existing.specification_categories = _merge_unique(
++                    existing.specification_categories, synthetic.specification_categories
++                )
++                existing.keywords = _merge_unique(existing.keywords, synthetic.keywords)
++            else:
++                module_lookup[synthetic.model_number] = synthetic
++
++        self.modules = list(module_lookup.values())
++        self.category_to_modules = {}
++        for module in self.modules:
++            for category in module.specification_categories:
++                self.category_to_modules.setdefault(category, []).append(module)
++        self.module_index = {module.model_number: module for module in self.modules}
++
++    # ------------------------------------------------------------------
++    def _load_placement_rules(self) -> None:
++        reader = XLSXReader(self.placement_workbook)
++        sheet = reader.read_sheet()
++        hierarchy: List[str] = [""] * len(sheet.rows[0]) if sheet.rows else []
++
++        for row in sheet.rows:
++            for idx, cell in enumerate(row):
++                value = cell.strip()
++                if not value:
++                    continue
++                hierarchy[idx] = value
++                for reset_idx in range(idx + 1, len(hierarchy)):
++                    hierarchy[reset_idx] = ""
++                path = tuple(filter(None, hierarchy[:idx]))
++                if path:
++                    self.placement_rules.append(PlacementRule(path=path, text=value))
++                break
++
++    # ------------------------------------------------------------------
++    def ensure_rule_keywords(self, required_keywords: Iterable[str]) -> None:
++        catalogue = " ".join(rule.text.lower() for rule in self.placement_rules)
++        missing = [keyword for keyword in required_keywords if keyword.lower() not in catalogue]
++        if missing:
++            raise ValueError(
++                "Missing critical placement guidelines in workbook: " + ", ".join(missing)
++            )
++
++    # ------------------------------------------------------------------
++    def get_module(self, model_number: str) -> Optional[ModuleDefinition]:
++        return self.module_index.get(model_number)
++
++    def estimate_cost(self, model_number: str, quantity: int = 1) -> float:
++        module = self.get_module(model_number)
++        if module and module.price > 0:
++            return module.price * quantity
++        if model_number in self.module_prices:
++            return self.module_prices[model_number] * quantity
++        if module and module.specification_categories:
++            category = module.specification_categories[0]
++            if category in self.category_prices:
++                return self.category_prices[category] * quantity
++        # Fallback guardrail cost encourages solver to keep selections minimal.
++        return 1000.0 * quantity
++
++
++# ---------------------------------------------------------------------------
++# Helper functions
++# ---------------------------------------------------------------------------
++
++
++def _safe_float(value: Optional[str]) -> Optional[float]:
++    if value is None:
++        return None
++    cleaned = "".join(ch for ch in str(value) if ch.isdigit() or ch in {".", "-"})
++    if not cleaned:
++        return None
++    try:
++        return float(cleaned)
++    except ValueError:
++        return None
++
++
++SPACE_OVERRIDES: Dict[str, Tuple[float, float]] = {
++    # Audio/telephone modules with microphones occupy both internal slots and door space.
++    "4100-1243": (2.0, 1.0),  # Master microphone assembly
++    "4100-1252": (1.0, 1.0),  # Audio/telephone operator interface
++    "4100-1253": (2.0, 1.0),  # Combined audio + microphone interface
++    "4100-1254": (2.0, 1.0),  # Two-channel audio operator interface
++    "4100-1270": (2.0, 1.0),  # Fire fighters telephone control
++    "4100-9620": (8.0, 1.0),  # Basic analog audio w/ microphone reserves a bay
++}
++
++ENCLOSURE_DEFINITIONS = [
++    {
++        "model_number": "4100-9401",
++        "description": "4100ES 1-bay cabinet backbox",
++        "category": "Cabinet Assemblies",
++        "keywords": ["cabinet", "backbox", "1-bay"],
++        "price": 950.0,
++        "size": 1,
++        "family": "cabinet",
++    },
++    {
++        "model_number": "4100-9402",
++        "description": "4100ES 2-bay cabinet backbox",
++        "category": "Cabinet Assemblies",
++        "keywords": ["cabinet", "backbox", "2-bay"],
++        "price": 1200.0,
++        "size": 2,
++        "family": "cabinet",
++    },
++    {
++        "model_number": "4100-9403",
++        "description": "4100ES 3-bay cabinet backbox",
++        "category": "Cabinet Assemblies",
++        "keywords": ["cabinet", "backbox", "3-bay"],
++        "price": 1450.0,
++        "size": 3,
++        "family": "cabinet",
++    },
++    {
++        "model_number": "4100-9404",
++        "description": "4100ES 1-bay solid door",
++        "category": "Cabinet Doors",
++        "keywords": ["door", "solid", "1-bay"],
++        "price": 420.0,
++        "size": 1,
++        "family": "door_solid",
++    },
++    {
++        "model_number": "4100-9405",
++        "description": "4100ES 2-bay solid door",
++        "category": "Cabinet Doors",
++        "keywords": ["door", "solid", "2-bay"],
++        "price": 520.0,
++        "size": 2,
++        "family": "door_solid",
++    },
++    {
++        "model_number": "4100-9406",
++        "description": "4100ES 3-bay solid door",
++        "category": "Cabinet Doors",
++        "keywords": ["door", "solid", "3-bay"],
++        "price": 620.0,
++        "size": 3,
++        "family": "door_solid",
++    },
++    {
++        "model_number": "4100-9407",
++        "description": "4100ES 1-bay glass door",
++        "category": "Cabinet Doors",
++        "keywords": ["door", "glass", "1-bay"],
++        "price": 560.0,
++        "size": 1,
++        "family": "door_glass",
++    },
++    {
++        "model_number": "4100-9408",
++        "description": "4100ES 2-bay glass door",
++        "category": "Cabinet Doors",
++        "keywords": ["door", "glass", "2-bay"],
++        "price": 690.0,
++        "size": 2,
++        "family": "door_glass",
++    },
++    {
++        "model_number": "4100-9409",
++        "description": "4100ES 3-bay glass door",
++        "category": "Cabinet Doors",
++        "keywords": ["door", "glass", "3-bay"],
++        "price": 820.0,
++        "size": 3,
++        "family": "door_glass",
++    },
++]
++
++def _build_enclosure_maps():
++    cabinet: Dict[int, str] = {}
++    solid: Dict[int, str] = {}
++    glass: Dict[int, str] = {}
++    for entry in ENCLOSURE_DEFINITIONS:
++        size = int(entry["size"])
++        model = entry["model_number"]
++        if entry["family"] == "cabinet":
++            cabinet[size] = model
++        elif entry["family"] == "door_solid":
++            solid[size] = model
++        elif entry["family"] == "door_glass":
++            glass[size] = model
++    return cabinet, solid, glass
++
++
++CABINET_SIZE_TO_MODEL, SOLID_DOOR_SIZE_TO_MODEL, GLASS_DOOR_SIZE_TO_MODEL = _build_enclosure_maps()
++
++SYNTHETIC_MODULES: List[ModuleDefinition] = []
++for entry in ENCLOSURE_DEFINITIONS:
++    SYNTHETIC_MODULES.append(
++        ModuleDefinition(
++            model_number=entry["model_number"],
++            description=entry["description"],
++            compatible_panels=["4100ES"],
++            compatible_protocols=["IDNet2", "MX"],
++            total_point_capacity=None,
++            circuit_capacity=None,
++            supervisory_current=None,
++            alarm_current=None,
++            supported_speakers=None,
++            circuits=None,
++            compulsory_main_modules=[],
++            module_role="Cabinet",
++            physical_size="",
++            mounted_on="",
++            dependencies=[],
++            specification_categories=[entry["category"]],
++            keywords=list(entry["keywords"]),
++            price=float(entry["price"]),
++        )
++    )
++
++MODULE_ALIASES = {
++    "MASTER_CONTROLLER": "4100-9701",
++    "IDNET_DUAL_LOOP": "4100-3109",
++    "POWER_SUPPLY_MAIN": "4100-5311",
++    "POWER_SUPPLY_EXPANSION": "4100-5325",
++    "IDNAC_MODULE": "4100-5451",
++    "CONVENTIONAL_NAC": "4100-5450",
++    "NAC_CLASS_A": "4100-1246",
++    "NAC_SUPERVISION": "4100-1266",
++    "AUDIO_BASE": "4100-9620",
++    "AUDIO_OPERATOR": "4100-1254",
++    "AUDIO_AMPLIFIER": "4100-1248",
++    "AUDIO_CLASS_A": "4100-1249",
++    "FIRE_PHONE": "4100-1270",
++    "LED_CONTROLLER": "4100-1288",
++    "PRINTER": "4100-1293",
++    "RS232": "4100-6038",
++    "NETWORK_INTERFACE": "4100-6080",
++    "RELAY_MODULE": "4100-6033",
++    "RELAY_ZONE": "4100-5013",
++}
++
++INTERNAL_BLOCKS_PER_BAY = 8.0  # Blocks A-H
++DOOR_SLOTS_PER_BAY = 8.0  # Front door slots 1-8
++
++_NUMERIC_SLOT_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*slots?", re.IGNORECASE)
++_NUMERIC_BLOCK_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*blocks?", re.IGNORECASE)
++_SLOT_INLINE_PATTERN = re.compile(r"slot\s*([0-9]+)", re.IGNORECASE)
++_BLOCK_INLINE_PATTERN = re.compile(r"block\s*([a-h]+)", re.IGNORECASE)
++
++
++def _merge_unique(values: List[str], additions: Iterable[str]) -> List[str]:
++    lookup = {value.lower(): value for value in values if value}
++    for value in additions:
++        if not value:
++            continue
++        key = value.lower()
++        if key not in lookup:
++            lookup[key] = value
++    return list(lookup.values())
++
++
++def _inline_slot_usage(text: str) -> float:
++    collapsed = text.replace(" ", "")
++    values = []
++    for match in _SLOT_INLINE_PATTERN.finditer(collapsed):
++        digits = match.group(1)
++        if not digits:
++            continue
++        values.append(float(max(1, len(set(digits)))))
++    return max(values, default=0.0)
++
++
++def _inline_block_usage(text: str) -> float:
++    collapsed = text.replace(" ", "").lower()
++    values = []
++    for match in _BLOCK_INLINE_PATTERN.finditer(collapsed):
++        letters = [ch for ch in match.group(1) if "a" <= ch <= "h"]
++        if not letters:
++            continue
++        values.append(float(max(1, len(set(letters)))))
++    return max(values, default=0.0)
++
++
++def _numeric_keyword_usage(pattern: re.Pattern[str], text: str) -> float:
++    value = 0.0
++    for match in pattern.finditer(text):
++        try:
++            quantity = float(match.group(1))
++        except (TypeError, ValueError):
++            continue
++        if 0 < quantity <= 32:
++            value = max(value, quantity)
++    return value
++
++
++def _derive_space_requirements(
++    model_number: str, physical_size: str, mounted_on: str
++) -> Tuple[float, float]:
++    override = SPACE_OVERRIDES.get(model_number)
++    if override:
++        return override
++
++    text = (physical_size or "").strip()
++    mount = (mounted_on or "").strip().lower()
++    if not text and mount not in {"internal", "door", "both"}:
++        return (0.0, 0.0)
++
++    numeric_slots = _numeric_keyword_usage(_NUMERIC_SLOT_PATTERN, text)
++    numeric_blocks = _numeric_keyword_usage(_NUMERIC_BLOCK_PATTERN, text)
++    inline_slots = _inline_slot_usage(text)
++    inline_blocks = _inline_block_usage(text)
++
++    base_internal = max(numeric_blocks, inline_blocks, numeric_slots, inline_slots)
++    base_door = max(numeric_slots, inline_slots, numeric_blocks if numeric_slots == 0 else 0.0, inline_blocks if inline_slots == 0 else 0.0)
++
++    internal = 0.0
++    door = 0.0
++
++    if mount in {"internal", "both"}:
++        internal = base_internal
++    if mount in {"door", "both"}:
++        door = base_door
++
++    if mount in {"internal", "both"} and internal <= 0:
++        internal = 1.0 if mount != "door" else 0.0
++    if mount in {"door", "both"} and door <= 0:
++        door = 1.0 if mount != "internal" else 0.0
++
++    if mount == "both":
++        internal = max(internal, 1.0)
++        door = max(door, 1.0)
++
++    return (internal, door)
++
++
++def _allocate_enclosure_sizes(
++    required_bays: int, size_to_model: Dict[int, str]
++) -> Dict[str, int]:
++    plan: Dict[str, int] = {}
++    if required_bays <= 0 or not size_to_model:
++        return plan
++    sizes = sorted(size_to_model.keys(), reverse=True)
++    remaining = required_bays
++    for idx, size in enumerate(sizes):
++        if remaining <= 0:
++            break
++        count = remaining // size
++        if count == 0 and idx == len(sizes) - 1:
++            count = 1
++        if count <= 0:
++            continue
++        model = size_to_model[size]
++        plan[model] = plan.get(model, 0) + count
++        remaining -= size * count
++    if remaining > 0:
++        smallest = sizes[-1]
++        model = size_to_model[smallest]
++        plan[model] = plan.get(model, 0) + 1
++    return plan
++
++
++# ---------------------------------------------------------------------------
++# Rule engine main class
++# ---------------------------------------------------------------------------
++
++
++class RuleEngine:
++    """High level orchestrator for deriving optimisation problems."""
++
++    def __init__(
++        self,
++        module_workbook: str = "4100ES_All_Modules_Complete MX rev2.xlsx",
++        placement_workbook: str = "4100ES Overview of Placement Rules.xlsx",
++        pricing_overrides: Optional[str] = None,
++    ) -> None:
++        self.repository = RuleRepository(
++            module_workbook=module_workbook,
++            placement_workbook=placement_workbook,
++            pricing_overrides=pricing_overrides,
++        )
++        # Ensure critical placement instructions were loaded to avoid silent omissions.
++        self.repository.ensure_rule_keywords(
++            [
++                "power supply",
++                "audio controller",
++                "amplifier",
++                "display",
++                "annunciator",
++            ]
++        )
++
++    # ------------------------------------------------------------------
++    def build_requirements(self, answers, boq) -> PanelRequirements:
++        loop_devices = (
++            boq.smoke_detector
++            + boq.heat_detector
++            + boq.duct_detector
++            + boq.beam_detector
++            + boq.manual_station
++            + boq.monitor_module
++            + boq.control_relay
++        )
++        idnet_modules_required = max(1, math.ceil(loop_devices / 500)) if loop_devices else 1
++        slc_loops_required = idnet_modules_required * 2
++
++        nac_devices = (
++            boq.horn_strobe
++            + boq.strobe_only
++            + boq.horn_only
++            + boq.addressable_horn_strobe
++            + boq.addressable_strobe
++            + boq.speaker_strobe
++        )
++        nac_circuits_required = math.ceil(nac_devices / 14) if nac_devices else 0
++
++        speaker_total = boq.speaker + boq.speaker_strobe
++        relay_count = boq.control_relay + answers.smoke_management_relay_count
++        if answers.fire_damper_feedback or answers.fire_damper_led_indication:
++            relay_count = max(relay_count, 8)
++        if answers.door_holder_voltage == "220vac":
++            relay_count += 1
++
++        speaker_wattage = answers.speaker_wattage
++        if speaker_wattage <= 0 and speaker_total > 0:
++            speaker_wattage = speaker_total * 15  # conservative default per device
++
++        fire_phone_circuits = math.ceil(boq.fire_phone_jack / 10) if boq.fire_phone_jack else 0
++
++        requires_network_cards = (
++            answers.has_graphics_command_center
++            or answers.graphics_software_type in {"view_only", "full_control"}
++            or answers.network_type != "none"
++        )
++        network_links = 0
++        if requires_network_cards:
++            network_links = 1
++        if answers.network_type in {"smfo", "mmfo"}:
++            network_links = max(network_links, 2)
++        if answers.graphics_software_type == "full_control":
++            network_links = max(network_links, 2)
++
++        requires_led_packages = (
++            answers.audio_control_led_switches
++            or answers.monitor_modules_with_leds
++            or answers.fire_damper_led_indication
++        )
++
++        return PanelRequirements(
++            protocol=answers.protocol.value,
++            voice_evacuation=answers.audio_type.name.lower() != "no_audio",
++            prefer_addressable_nac=answers.use_addressable_nac,
++            has_fire_phone=answers.has_fire_phone or fire_phone_circuits > 0,
++            has_led_switches=answers.audio_control_led_switches or answers.monitor_modules_with_leds,
++            has_smoke_management=answers.has_smoke_management,
++            has_door_holder_220vac=(answers.door_holder_voltage == "220vac"),
++            monitor_leds=answers.monitor_modules_with_leds,
++            graphics_control=answers.graphics_software_type == "full_control",
++            speaker_wattage=speaker_wattage,
++            speaker_count=speaker_total,
++            fire_phone_circuits=fire_phone_circuits,
++            nac_circuits_required=nac_circuits_required,
++            slc_loops_required=slc_loops_required,
++            relay_count=relay_count,
++            loop_device_count=loop_devices,
++            nac_device_count=nac_devices,
++            idnet_modules_required=idnet_modules_required,
++            requires_printer=answers.has_panel_printer,
++            requires_network_cards=requires_network_cards,
++            network_links=network_links,
++            nac_class_a=answers.nac_class_a_wiring,
++            speaker_class_a=answers.speaker_class_a_wiring,
++            constant_supervision=answers.constant_supervision_speaker,
++            requires_led_packages=requires_led_packages,
++            fire_damper_control=(answers.fire_damper_feedback or answers.fire_damper_led_indication),
++            dual_amplifier_per_zone=getattr(answers, "dual_amplifier_per_zone", False),
++            backup_amp_one_to_one=getattr(answers, "backup_amplifier_one_to_one", False),
++            backup_amp_one_for_all=getattr(answers, "backup_amplifier_one_for_all", False),
++        )
++
++    # ------------------------------------------------------------------
++    def derive_category_requirements(self, requirements: PanelRequirements) -> Dict[str, int]:
++        category_requirements: Dict[str, int] = {}
++
++        def ensure(category: str, quantity: int) -> None:
++            if quantity <= 0:
++                return
++            category_requirements[category] = max(category_requirements.get(category, 0), quantity)
++
++        ensure("Master Controller", 1)
++        ensure(
++            "Power Supplies",
++            max(1, math.ceil(max(requirements.nac_circuits_required, 1) / 3)),
++        )
++        nac_power_padding = math.ceil(requirements.nac_device_count / 56) if requirements.nac_device_count else 0
++        ensure("EPS & Accessories", max(1, math.ceil(requirements.speaker_wattage / 400) + nac_power_padding))
++        ensure("IDNet Modules", requirements.idnet_modules_required)
++
++        if requirements.nac_circuits_required:
++            if requirements.prefer_addressable_nac:
++                ensure(
++                    "Notification Modules",
++                    max(1, math.ceil(requirements.nac_circuits_required / 2)),
++                )
++            else:
++                ensure(
++                    "Notification Modules",
++                    max(1, math.ceil(requirements.nac_circuits_required / 3)),
++                )
++
++        if requirements.voice_evacuation:
++            audio_modules = max(1, math.ceil(requirements.speaker_wattage / 100))
++            ensure("Audio Options (S4100-0104)", audio_modules)
++            ensure("VCC Interfaces (S4100-0104)", 1)
++
++        if requirements.has_fire_phone:
++            ensure("Telephone (S4100-0104)", max(1, requirements.fire_phone_circuits))
++
++        if requirements.requires_led_packages:
++            ensure("LED-Switch (4100-0032)", 1)
++
++        if requirements.has_smoke_management or requirements.relay_count:
++            ensure("Relay Modules", max(1, math.ceil(max(1, requirements.relay_count) / 3)))
++
++        if requirements.graphics_control:
++            ensure("Master Controller", 1)  # additional CPU loading accounted by duplicate requirement
++
++        if requirements.has_door_holder_220vac:
++            ensure("Relay Modules", category_requirements.get("Relay Modules", 0) + 1)
++
++        # Remove zero entries explicitly.
++        return {key: value for key, value in category_requirements.items() if value > 0}
++
++    # ------------------------------------------------------------------
++    def _summarise_space_usage(
++        self, module_selection: Dict[str, int]
++    ) -> Tuple[Dict[str, float], Dict[str, int]]:
++        internal = 0.0
++        door = 0.0
++        for model_number, quantity in module_selection.items():
++            module = self.repository.get_module(model_number)
++            if not module:
++                continue
++            internal += module.internal_space * quantity
++            door += module.door_space * quantity
++
++        space_usage = {
++            "internal_blocks": internal,
++            "door_slots": door,
++        }
++        bay_allocation = {
++            "internal_bays": math.ceil(internal / INTERNAL_BLOCKS_PER_BAY)
++            if internal > 0
++            else 0,
++            "door_bays": math.ceil(door / DOOR_SLOTS_PER_BAY) if door > 0 else 0,
++        }
++        bay_allocation["recommended_bays"] = max(
++            bay_allocation["internal_bays"], bay_allocation["door_bays"]
++        )
++        return space_usage, bay_allocation
++
++    # ------------------------------------------------------------------
++    def _derive_specific_modules(self, requirements: PanelRequirements) -> Dict[str, int]:
++        plan: Dict[str, int] = {}
++
++        def add(model: str, quantity: float) -> None:
++            if quantity <= 0:
++                return
++            plan[model] = max(plan.get(model, 0), int(math.ceil(quantity)))
++
++        add(MODULE_ALIASES["MASTER_CONTROLLER"], 1)
++        add(MODULE_ALIASES["POWER_SUPPLY_MAIN"], 1)
++        add(MODULE_ALIASES["IDNET_DUAL_LOOP"], requirements.idnet_modules_required)
++
++        if requirements.idnet_modules_required > 1:
++            add(
++                MODULE_ALIASES["POWER_SUPPLY_EXPANSION"],
++                requirements.idnet_modules_required - 1,
++            )
++
++        if requirements.nac_circuits_required:
++            if requirements.prefer_addressable_nac:
++                add(
++                    MODULE_ALIASES["IDNAC_MODULE"],
++                    math.ceil(requirements.nac_circuits_required / 2),
++                )
++            else:
++                add(
++                    MODULE_ALIASES["CONVENTIONAL_NAC"],
++                    math.ceil(requirements.nac_circuits_required / 3),
++                )
++        if requirements.nac_class_a:
++            add(
++                MODULE_ALIASES["NAC_CLASS_A"],
++                max(1, math.ceil(requirements.nac_circuits_required / 3)),
++            )
++        if requirements.constant_supervision:
++            add(
++                MODULE_ALIASES["NAC_SUPERVISION"],
++                max(1, math.ceil(requirements.nac_circuits_required / 4)),
++            )
++
++        if requirements.voice_evacuation:
++            add(MODULE_ALIASES["AUDIO_BASE"], 1)
++            add(MODULE_ALIASES["AUDIO_OPERATOR"], 1)
++            amplifiers = max(1, math.ceil(requirements.speaker_wattage / 100))
++            if requirements.backup_amp_one_to_one or requirements.dual_amplifier_per_zone:
++                amplifiers *= 2
++            elif requirements.backup_amp_one_for_all:
++                amplifiers += 1
++            add(MODULE_ALIASES["AUDIO_AMPLIFIER"], amplifiers)
++            if requirements.speaker_class_a:
++                add(
++                    MODULE_ALIASES["AUDIO_CLASS_A"],
++                    max(1, math.ceil(requirements.speaker_count / 2)),
++                )
++
++        if requirements.has_fire_phone:
++            add(
++                MODULE_ALIASES["FIRE_PHONE"],
++                max(1, math.ceil(max(1, requirements.fire_phone_circuits) / 3)),
++            )
++
++        if requirements.requires_led_packages:
++            add(MODULE_ALIASES["LED_CONTROLLER"], 1)
++
++        if requirements.requires_printer:
++            add(MODULE_ALIASES["PRINTER"], 1)
++            add(MODULE_ALIASES["RS232"], 1)
++
++        if requirements.requires_network_cards:
++            add(MODULE_ALIASES["NETWORK_INTERFACE"], max(1, requirements.network_links))
++
++        total_relays = requirements.relay_count
++        if requirements.has_door_holder_220vac:
++            total_relays = max(total_relays, requirements.relay_count + 1)
++        if requirements.fire_damper_control:
++            add(
++                MODULE_ALIASES["RELAY_ZONE"],
++                max(1, math.ceil(max(8, total_relays) / 8)),
++            )
++        elif total_relays:
++            add(MODULE_ALIASES["RELAY_MODULE"], max(1, math.ceil(total_relays / 3)))
++
++        return plan
++
++    # ------------------------------------------------------------------
++    def _derive_enclosure_modules(
++        self, module_selection: Dict[str, int]
++    ) -> Dict[str, int]:
++        space_usage, bay_allocation = self._summarise_space_usage(module_selection)
++        required_bays = max(1, int(bay_allocation.get("recommended_bays", 0)))
++        plan: Dict[str, int] = {}
++
++        def merge(source: Dict[str, int]) -> None:
++            for model, quantity in source.items():
++                if quantity <= 0:
++                    continue
++                plan[model] = plan.get(model, 0) + quantity
++
++        merge(_allocate_enclosure_sizes(required_bays, CABINET_SIZE_TO_MODEL))
++        door_map = (
++            GLASS_DOOR_SIZE_TO_MODEL
++            if space_usage.get("door_slots", 0.0) > 0
++            else SOLID_DOOR_SIZE_TO_MODEL
++        )
++        merge(_allocate_enclosure_sizes(required_bays, door_map))
++        return plan
++
++    # ------------------------------------------------------------------
++    def _build_solver(self, category_requirements: Dict[str, int]) -> Optional[OptimizationResult]:
++        if cp_model is None:
++            return None
++
++        model = cp_model.CpModel()
++        variables: Dict[str, cp_model.IntVar] = {}
++        for module in self.repository.modules:
++            variables[module.model_number] = model.NewIntVar(0, 20, module.model_number)
++
++        # For each required category ensure sufficient quantity is purchased.
++        for category, min_quantity in category_requirements.items():
++            modules = self.repository.category_to_modules.get(category, [])
++            if not modules:
++                continue
++            model.Add(
++                sum(variables[module.model_number] for module in modules) >= min_quantity
++            )
++
++        # Objective: minimise total price (or block count if price missing).
++        objective_terms = []
++        for module in self.repository.modules:
++            unit_cost = module.price if module.price > 0 else module.block_count or 1.0
++            weight = max(1, int(round(unit_cost * 100)))
++            objective_terms.append(weight * variables[module.model_number])
++        model.Minimize(sum(objective_terms))
++
++        solver = cp_model.CpSolver()
++        solver.parameters.max_time_in_seconds = 10
++        status = solver.Solve(model)
++
++        module_selection: Dict[str, int] = {}
++        total_cost = 0.0
++        if status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
++            for module in self.repository.modules:
++                quantity = solver.Value(variables[module.model_number])
++                if quantity:
++                    module_selection[module.model_number] = quantity
++                    total_cost += module.price * quantity
++            status_name = cp_model.OPTIMAL if status == cp_model.OPTIMAL else "FEASIBLE"
++        else:
++            status_name = "INFEASIBLE"
++
++        space_usage, bay_allocation = self._summarise_space_usage(module_selection)
++
++        return OptimizationResult(
++            category_requirements=category_requirements,
++            module_selection=module_selection,
++            estimated_cost=total_cost,
++            solver_status=str(status_name),
++            space_usage=space_usage,
++            bay_allocation=bay_allocation,
++        )
++
++    # ------------------------------------------------------------------
++    def _build_greedy_selection(
++        self, category_requirements: Dict[str, int]
++    ) -> OptimizationResult:
++        module_selection: Dict[str, int] = {}
++        total_cost = 0.0
++
++        for category, quantity in category_requirements.items():
++            modules = sorted(
++                self.repository.category_to_modules.get(category, []),
++                key=lambda module: (
++                    module.price if module.price > 0 else float("inf"),
++                    module.block_count,
++                    module.model_number,
++                ),
++            )
++            if not modules:
++                continue
++            chosen = modules[0]
++            module_selection[chosen.model_number] = quantity
++            unit_cost = (
++                chosen.price
++                if chosen.price > 0
++                else self.repository.category_prices.get(category, 1.0)
++            )
++            total_cost += unit_cost * quantity
++
++        space_usage, bay_allocation = self._summarise_space_usage(module_selection)
++        return OptimizationResult(
++            category_requirements=category_requirements,
++            module_selection=module_selection,
++            estimated_cost=total_cost,
++            solver_status="GREEDY",
++            space_usage=space_usage,
++            bay_allocation=bay_allocation,
++        )
++
++    # ------------------------------------------------------------------
++    def optimise_panel(self, answers, boq) -> OptimizationResult:
++        requirements = self.build_requirements(answers, boq)
++        category_requirements = self.derive_category_requirements(requirements)
++
++        solver_result = self._build_solver(category_requirements)
++        if solver_result is None:
++            solver_result = self._build_greedy_selection(category_requirements)
++
++        manual_plan = self._derive_specific_modules(requirements)
++        module_selection = dict(solver_result.module_selection)
++        for model_number, quantity in manual_plan.items():
++            module_selection[model_number] = max(module_selection.get(model_number, 0), quantity)
++
++        enclosure_plan = self._derive_enclosure_modules(module_selection)
++        for model_number, quantity in enclosure_plan.items():
++            module_selection[model_number] = module_selection.get(model_number, 0) + quantity
++
++        estimated_cost = sum(
++            self.repository.estimate_cost(model_number, quantity)
++            for model_number, quantity in module_selection.items()
++        )
++        space_usage, bay_allocation = self._summarise_space_usage(module_selection)
++
++        solver_status = solver_result.solver_status or ""
++        if solver_status:
++            solver_status = f"{solver_status}+PLAN"
++        else:
++            solver_status = "PLAN"
++
++        return OptimizationResult(
++            category_requirements=category_requirements,
++            module_selection=module_selection,
++            estimated_cost=estimated_cost,
++            solver_status=solver_status,
++            space_usage=space_usage,
++            bay_allocation=bay_allocation,
++        )
+ 
+EOF
+)
+
+
+
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/excel_reader.py b/excel_reader.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..af34549109a57ff97ef7858cf0614f68949f2015
+--- /dev/null
++++ b/excel_reader.py
+@@ -0,0 +1,152 @@
++"""Utility module for reading XLSX files without external dependencies."""
++from __future__ import annotations
++
++from dataclasses import dataclass
++from typing import Dict, Iterable, List, Optional
++import zipfile
++from xml.etree import ElementTree as ET
++
++# Namespaces used in XLSX XML files
++XL_NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
++# Workbook relationship files use the generic OPC package namespace rather than
++# the officeDocument relationships namespace.
++PKG_REL_NS = "{http://schemas.openxmlformats.org/package/2006/relationships}"
++REL_NS = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
++
++
++def _column_index(column_ref: str) -> int:
++    """Convert an Excel column reference (e.g. 'AA') to a 1-based index."""
++    index = 0
++    for char in column_ref:
++        if not char.isalpha():
++            break
++        index = index * 26 + (ord(char.upper()) - 64)
++    return index
++
++
++@dataclass
++class SheetData:
++    """Represents a sheet within an XLSX workbook."""
++
++    name: str
++    rows: List[List[str]]
++
++    def records(self, *, header: bool = True) -> List[Dict[str, str]]:
++        """Return the sheet rows as a list of dictionaries."""
++        if not self.rows:
++            return []
++        if not header:
++            return [dict(enumerate(row)) for row in self.rows]
++
++        headers = [cell.strip() for cell in self.rows[0]]
++        records: List[Dict[str, str]] = []
++        for row in self.rows[1:]:
++            record: Dict[str, str] = {}
++            for idx, header_name in enumerate(headers):
++                if not header_name:
++                    continue
++                if idx < len(row):
++                    record[header_name] = row[idx]
++                else:
++                    record[header_name] = ""
++            # Skip completely empty rows
++            if any(value.strip() for value in record.values()):
++                records.append(record)
++        return records
++
++
++class XLSXReader:
++    """Lightweight XLSX reader implemented with the standard library."""
++
++    def __init__(self, workbook_path: str) -> None:
++        self.workbook_path = workbook_path
++        self._shared_strings: List[str] = []
++        self._sheet_files: Dict[str, str] = {}
++        self._load_workbook_metadata()
++
++    # ------------------------------------------------------------------
++    # Metadata loading helpers
++    # ------------------------------------------------------------------
++    def _load_workbook_metadata(self) -> None:
++        with zipfile.ZipFile(self.workbook_path) as archive:
++            if "xl/sharedStrings.xml" in archive.namelist():
++                shared_tree = ET.fromstring(archive.read("xl/sharedStrings.xml"))
++                for si in shared_tree.iter(f"{XL_NS}si"):
++                    text = "".join(t.text or "" for t in si.iter(f"{XL_NS}t"))
++                    self._shared_strings.append(text)
++
++            workbook_tree = ET.fromstring(archive.read("xl/workbook.xml"))
++            sheet_elements = list(workbook_tree.iter(f"{XL_NS}sheet"))
++
++            rels_tree = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
++            relationships = {
++                rel.get("Id"): rel.get("Target")
++                for rel in rels_tree.iter(f"{PKG_REL_NS}Relationship")
++            }
++
++            for sheet in sheet_elements:
++                name = sheet.get("name") or "Sheet1"
++                rel_id = sheet.get(f"{REL_NS}id")
++                if rel_id and rel_id in relationships:
++                    target = relationships[rel_id]
++                    if not target.startswith("/"):
++                        target = "xl/" + target
++                    self._sheet_files[name] = target
++
++    # ------------------------------------------------------------------
++    # Public API
++    # ------------------------------------------------------------------
++    def sheet_names(self) -> List[str]:
++        return list(self._sheet_files.keys())
++
++    def read_sheet(self, name: Optional[str] = None) -> SheetData:
++        if name is None:
++            if not self._sheet_files:
++                raise ValueError("Workbook contains no sheets")
++            name = next(iter(self._sheet_files))
++        if name not in self._sheet_files:
++            raise KeyError(f"Sheet '{name}' not found in {self.workbook_path}")
++
++        sheet_path = self._sheet_files[name]
++        with zipfile.ZipFile(self.workbook_path) as archive:
++            sheet_tree = ET.fromstring(archive.read(sheet_path))
++            raw_rows: List[Dict[int, str]] = []
++            max_column = 0
++            for row in sheet_tree.iter(f"{XL_NS}row"):
++                row_values: Dict[int, str] = {}
++                for cell in row.iter(f"{XL_NS}c"):
++                    ref = cell.get("r", "A1")
++                    column_ref = "".join(ch for ch in ref if ch.isalpha())
++                    column_index = _column_index(column_ref)
++                    max_column = max(max_column, column_index)
++
++                    cell_type = cell.get("t")
++                    value_element = cell.find(f"{XL_NS}v")
++                    value: str
++                    if value_element is None:
++                        inline = cell.find(f"{XL_NS}is")
++                        if inline is not None:
++                            value = "".join(
++                                t.text or "" for t in inline.iter(f"{XL_NS}t")
++                            )
++                        else:
++                            value = ""
++                    elif cell_type == "s":
++                        value = self._shared_strings[int(value_element.text or "0")]
++                    else:
++                        value = value_element.text or ""
++                    row_values[column_index] = value
++                raw_rows.append(row_values)
++
++            rows: List[List[str]] = []
++            for row_values in raw_rows:
++                row_list = ["" for _ in range(max_column)]
++                for idx, value in row_values.items():
++                    row_list[idx - 1] = value
++                rows.append(row_list)
++
++        return SheetData(name=name, rows=rows)
++
++    def iter_sheets(self) -> Iterable[SheetData]:
++        for name in self.sheet_names():
++            yield self.read_sheet(name)
+ 
+EOF
+)
+
+
+
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/qanda_processor_and_multi_panel_handler.py b/qanda_processor_and_multi_panel_handler.py
+index d4a5d7473de2e5966b47213f264f465b27995bb7..02b236e8e643b9d219e221e8de01ab63ffbef25e 100644
+--- a/qanda_processor_and_multi_panel_handler.py
++++ b/qanda_processor_and_multi_panel_handler.py
+@@ -1,49 +1,55 @@
+ """
+ Q&A Processor and Multi-Panel BOQ Handler for CP-SAT Engine
+ ============================================================
+ 
+ This module processes project Q&A Excel files and BOQ data to generate
+ proper configuration constraints for the CP-SAT optimizer.
+ 
+ Features:
+ 1. Read Q&A Excel and convert to configuration constraints
+ 2. Handle multi-panel projects by dividing device quantities
+ 3. Create separate configurations for remote annunciators
+ 4. Generate JSON/Python dict format for CP-SAT input
+ 
+ Author: Fire Alarm System Configurator
+ Date: 2024
+ """
+ 
+-import pandas as pd
+-import openpyxl
+ import json
+-from typing import Dict, List, Tuple, Optional
++import math
+ from dataclasses import dataclass, asdict
+ from enum import Enum
+-import math
++from typing import Dict, List, Tuple, Optional
++
++try:  # Optional dependency for richer Excel parsing
++    import pandas as pd
++except Exception:  # pragma: no cover - fallback to lightweight reader
++    pd = None  # type: ignore
++
++from excel_reader import XLSXReader
++from cp_sat_rule_engine import RuleEngine, OptimizationResult
+ 
+ 
+ # ============================================================================
+ # DATA STRUCTURES
+ # ============================================================================
+ 
+ class ProtocolType(Enum):
+     """Device protocol type"""
+     IDNET2 = "idnet2"
+     MX = "mx"
+     
+ 
+ class PanelSeries(Enum):
+     """Panel series type"""
+     PANEL_4100ES = "4100ES"
+     PANEL_4007ES = "4007ES"
+     PANEL_4010ES = "4010ES"
+ 
+ 
+ class AudioType(Enum):
+     """Audio system type"""
+     NO_AUDIO = "no_audio"
+     BASIC_AUDIO = "basic_audio"
+     VOICE_EVACUATION = "voice_evacuation"
+ 
+@@ -141,85 +147,98 @@ class DeviceBOQ:
+     # Audio Devices
+     speaker: int = 0
+     speaker_strobe: int = 0
+     
+     # Monitor/Control
+     monitor_module: int = 0
+     control_relay: int = 0
+     
+     # Special Devices
+     fire_phone_jack: int = 0
+     remote_annunciator: int = 0
+     
+     # Simplex Part Numbers (Optional)
+     simplex_devices: Dict[str, int] = None  # {"4098-9756": 100, ...}
+ 
+ 
+ @dataclass
+ class PanelConfiguration:
+     """Configuration for a single panel"""
+     panel_id: str
+     panel_series: PanelSeries
+     boq: DeviceBOQ
+     constraints: Dict
+     is_main_panel: bool = True
+     is_remote_annunciator: bool = False
++    optimized_modules: Optional[Dict[str, int]] = None
++    category_requirements: Optional[Dict[str, int]] = None
++    estimated_cost: float = 0.0
++    solver_status: Optional[str] = None
++    space_usage: Optional[Dict[str, float]] = None
++    bay_allocation: Optional[Dict[str, int]] = None
+ 
+ 
+ # ============================================================================
+ # Q&A EXCEL PROCESSOR
+ # ============================================================================
+ 
+ class QandAProcessor:
+     """
+     Processes Q&A Excel file and converts answers to configuration constraints.
+     """
+     
+     def __init__(self, excel_path: str):
+         """
+         Initialize processor with Q&A Excel file.
+         
+         Args:
+             excel_path: Path to Q&A Excel file
+         """
+         self.excel_path = excel_path
+         self.df = None
+         self.answers = ProjectAnswers()
+         
+         # Load Excel
+         self._load_excel()
+     
+     
+     def _load_excel(self):
+         """Load Q&A Excel file"""
+         try:
+-            # Read Excel file
++            if pd is None:
++                raise ImportError("pandas not available")
+             self.df = pd.read_excel(self.excel_path, sheet_name='Sheet1')
+             print(f"✓ Loaded Q&A Excel: {self.excel_path}")
+             print(f"  Found {len(self.df)} questions")
+-        except Exception as e:
+-            raise ValueError(f"Failed to load Q&A Excel: {e}")
++        except Exception as exc:
++            reader = XLSXReader(self.excel_path)
++            sheet = reader.read_sheet()
++            row_count = max(0, len(sheet.rows) - 1)
++            self.df = None
++            print(f"✓ Loaded Q&A Excel (fallback parser): {self.excel_path}")
++            print(f"  Found {row_count} questions (shared strings parser)")
++            print(f"  pandas loader unavailable: {exc}")
+     
+     
+     def process_answers(self, answers_dict: Dict[int, str]) -> ProjectAnswers:
+         """
+         Process answers and populate ProjectAnswers structure.
+         
+         Args:
+             answers_dict: Dictionary of {question_number: answer}
+                          Example: {2: "yes", 3: "no", 8: "yes", ...}
+         
+         Returns:
+             ProjectAnswers object with all fields populated
+         """
+         print("\n" + "="*80)
+         print("PROCESSING Q&A ANSWERS")
+         print("="*80)
+         
+         # Convert answers to lowercase for consistency
+         answers = {k: str(v).lower().strip() for k, v in answers_dict.items()}
+         
+         # Q2-Q7: Protocol Selection
+         self.answers.has_short_circuit_isolator = answers.get(2) == 'yes'
+         self.answers.has_soft_addressable = answers.get(3) == 'yes'
+         self.answers.has_loop_powered_sounder = answers.get(5) == 'yes'
+         self.answers.detection_notification_same_loop = answers.get(6) == 'yes'
+@@ -636,75 +655,88 @@ class RemoteAnnunciatorHandler:
+             constraints=annunciator_constraints,
+             is_main_panel=False,
+             is_remote_annunciator=True,
+         )
+         
+         print("✓ Remote annunciator configuration created")
+         print("="*80 + "\n")
+         
+         return config
+ 
+ 
+ # ============================================================================
+ # MAIN ORCHESTRATOR
+ # ============================================================================
+ 
+ class ProjectConfigurator:
+     """
+     Main orchestrator that combines Q&A processing, BOQ handling,
+     and generates complete project configuration for CP-SAT.
+     """
+     
+     def __init__(self):
+         self.qa_processor: Optional[QandAProcessor] = None
+         self.project_answers: Optional[ProjectAnswers] = None
+         self.panel_configurations: List[PanelConfiguration] = []
++        self.rule_engine: Optional[RuleEngine] = None
+     
+     
+     def process_project(
+         self,
+         qa_excel_path: str,
+         qa_answers: Dict[int, str],
+         total_boq: DeviceBOQ,
+         num_panels: int = 1,
++        module_workbook_path: str = "4100ES_All_Modules_Complete MX rev2.xlsx",
++        placement_rules_path: str = "4100ES Overview of Placement Rules.xlsx",
++        pricing_overrides_path: Optional[str] = None,
+     ) -> List[PanelConfiguration]:
+         """
+         Complete project processing workflow.
+         
+         Args:
+             qa_excel_path: Path to Q&A Excel file
+             qa_answers: Dictionary of answers to questions
+             total_boq: Total device BOQ for project
+             num_panels: Number of main panels
+         
+         Returns:
+             List of PanelConfiguration objects ready for CP-SAT
+         """
+         print("\n" + "="*80)
+         print("PROJECT CONFIGURATION WORKFLOW")
+         print("="*80 + "\n")
+         
++        # Step 0: Load rule engine (ensures placement rules and catalog are parsed)
++        if self.rule_engine is None:
++            print("STEP 0: Loading rule repository...")
++            self.rule_engine = RuleEngine(
++                module_workbook=module_workbook_path,
++                placement_workbook=placement_rules_path,
++                pricing_overrides=pricing_overrides_path,
++            )
++
+         # Step 1: Process Q&A
+         print("STEP 1: Processing Q&A Excel...")
+         self.qa_processor = QandAProcessor(qa_excel_path)
+         self.project_answers = self.qa_processor.process_answers(qa_answers)
+         base_constraints = self.qa_processor.to_cpsat_constraints()
+         
+         # Step 2: Handle Fire Phone Jack Count
+         if total_boq.fire_phone_jack > 0:
+             # Calculate fire phone circuits (1 circuit per 10 jacks)
+             fire_phone_circuits = math.ceil(total_boq.fire_phone_jack / 10)
+             base_constraints["fire_phone_jack_count"] = total_boq.fire_phone_jack
+             base_constraints["fire_phone_circuits"] = fire_phone_circuits
+             print(f"\nFire Phone: {total_boq.fire_phone_jack} jacks → {fire_phone_circuits} circuits")
+         
+         # Step 3: Divide BOQ if multiple panels
+         print(f"\nSTEP 2: Dividing BOQ for {num_panels} panel(s)...")
+         if num_panels > 1:
+             boq_handler = MultiPanelBOQHandler(total_boq, num_panels)
+             panel_boqs = boq_handler.divide_boq(strategy="equal")
+         else:
+             panel_boqs = [total_boq]
+         
+         # Step 4: Create main panel configurations
+         print(f"\nSTEP 3: Creating {num_panels} main panel configuration(s)...")
+         for idx, panel_boq in enumerate(panel_boqs):
+@@ -720,114 +752,154 @@ class ProjectConfigurator:
+             print(f"  ✓ Created configuration for PANEL-{idx + 1}")
+         
+         # Step 5: Create remote annunciator if needed
+         if self.project_answers.remote_annunciator_with_audio_control:
+             print("\nSTEP 4: Creating remote annunciator configuration...")
+             annunciator_config = RemoteAnnunciatorHandler.create_annunciator_config(
+                 main_panel_constraints=base_constraints,
+                 has_audio_control=True,
+                 has_microphone=self.project_answers.audio_control_led_switches,
+                 has_led_switches=self.project_answers.audio_control_led_switches,
+             )
+             self.panel_configurations.append(annunciator_config)
+         
+         # Add remote annunciators from BOQ
+         if total_boq.remote_annunciator > 0 and not self.project_answers.remote_annunciator_with_audio_control:
+             print(f"\nSTEP 5: Creating {total_boq.remote_annunciator} standard remote annunciator(s)...")
+             for idx in range(total_boq.remote_annunciator):
+                 annunciator_config = RemoteAnnunciatorHandler.create_annunciator_config(
+                     main_panel_constraints=base_constraints,
+                     has_audio_control=False,
+                     has_microphone=False,
+                     has_led_switches=False,
+                 )
+                 annunciator_config.panel_id = f"ANNUNCIATOR-{idx + 1}"
+                 self.panel_configurations.append(annunciator_config)
+-        
++
++        # Step 6: Run rule engine optimisation for each configuration
++        if self.rule_engine is not None:
++            print("\nSTEP 6: Deriving module requirements from rule engine...")
++            for config in self.panel_configurations:
++                try:
++                    result: OptimizationResult = self.rule_engine.optimise_panel(
++                        self.project_answers, config.boq
++                    )
++                    config.optimized_modules = result.module_selection
++                    config.category_requirements = result.category_requirements
++                    config.estimated_cost = result.estimated_cost
++                    config.solver_status = result.solver_status
++                    config.space_usage = result.space_usage
++                    config.bay_allocation = result.bay_allocation
++                    print(
++                        f"  → {config.panel_id}: {len(result.module_selection)} module families, "
++                        f"est. cost ${result.estimated_cost:,.2f} ({result.solver_status}); "
++                        f"space internal {result.space_usage['internal_blocks']:.1f} blocks / "
++                        f"door {result.space_usage['door_slots']:.1f} slots"
++                    )
++                except Exception as optimisation_error:
++                    print(
++                        f"  ⚠️  Rule engine failed for {config.panel_id}: {optimisation_error}"
++                    )
++        else:
++            print("\n⚠️  Rule engine unavailable; optimisation skipped")
++
+         print("\n" + "="*80)
+         print("✓ PROJECT CONFIGURATION COMPLETE")
+         print(f"  Total configurations: {len(self.panel_configurations)}")
+         print(f"  Main panels: {sum(1 for c in self.panel_configurations if c.is_main_panel)}")
+         print(f"  Remote annunciators: {sum(1 for c in self.panel_configurations if c.is_remote_annunciator)}")
+         print("="*80 + "\n")
+         
+         return self.panel_configurations
+     
+     
+     def export_to_json(self, output_path: str):
+         """Export all configurations to JSON file"""
+         configs_dict = [
+             {
+                 "panel_id": config.panel_id,
+                 "panel_series": config.panel_series.value,
+                 "is_main_panel": config.is_main_panel,
+                 "is_remote_annunciator": config.is_remote_annunciator,
+                 "boq": asdict(config.boq),
+                 "constraints": config.constraints,
++                "category_requirements": config.category_requirements,
++                "optimized_modules": config.optimized_modules,
++                "estimated_cost": config.estimated_cost,
++                "solver_status": config.solver_status,
++                "space_usage": config.space_usage,
++                "bay_allocation": config.bay_allocation,
+             }
+             for config in self.panel_configurations
+         ]
+         
+         with open(output_path, 'w') as f:
+             json.dump(configs_dict, f, indent=2)
+         
+         print(f"✓ Exported {len(self.panel_configurations)} configuration(s) to: {output_path}")
+     
+     
+     def get_cpsat_inputs(self) -> List[Tuple[Dict, Dict]]:
+         """
+         Get BOQ and constraints for each panel in format ready for CP-SAT.
+         
+         Returns:
+             List of (boq_dict, constraints_dict) tuples
+         """
+         cpsat_inputs = []
+         
+         for config in self.panel_configurations:
+             # Convert DeviceBOQ to dictionary
+             boq_dict = {
+                 "smoke_detector": config.boq.smoke_detector,
+                 "heat_detector": config.boq.heat_detector,
+                 "duct_detector": config.boq.duct_detector,
+                 "beam_detector": config.boq.beam_detector,
+                 "manual_station": config.boq.manual_station,
+                 "horn_strobe": config.boq.horn_strobe,
+                 "strobe_only": config.boq.strobe_only,
+                 "horn_only": config.boq.horn_only,
+                 "addressable_horn_strobe": config.boq.addressable_horn_strobe,
+                 "speaker": config.boq.speaker,
+                 "speaker_strobe": config.boq.speaker_strobe,
+                 "monitor_module": config.boq.monitor_module,
+                 "control_relay": config.boq.control_relay,
+                 "fire_phone_jack": config.boq.fire_phone_jack,
+             }
+             
+             # Remove zero quantities
+             boq_dict = {k: v for k, v in boq_dict.items() if v > 0}
+             
+-            cpsat_inputs.append((boq_dict, config.constraints))
+-        
++            cpsat_inputs.append(
++                (
++                    boq_dict,
++                    config.constraints,
++                    config.optimized_modules or {},
++                    config.category_requirements or {},
++                )
++            )
++
+         return cpsat_inputs
+ 
+ 
+ # ============================================================================
+ # USAGE EXAMPLE
+ # ============================================================================
+ 
+ def main():
+     """Example usage of the complete workflow"""
+     
+     # Step 1: Define Q&A answers
+     qa_answers = {
+         2: "no",   # Short-circuit isolator → IDNet2
+         3: "no",   # Soft-addressable → IDNet2
+         8: "yes",  # Voice evacuation
+         11: "yes", # Addressable NAC
+         13: "2x40", # Display type
+         14: "yes", # Fire phone
+         23: "yes", # Panel printer
+         24: "yes", # Graphics command center
+         27: "ethernet", # Network type
+         35: "yes", # Remote annunciator with audio control
+     }
+     
+     # Step 2: Define total project BOQ
+@@ -839,35 +911,39 @@ def main():
+         speaker=150,
+         monitor_module=50,
+         control_relay=25,
+         fire_phone_jack=15,
+         remote_annunciator=2,
+     )
+     
+     # Step 3: Process project (3 panels)
+     configurator = ProjectConfigurator()
+     configurations = configurator.process_project(
+         qa_excel_path="/mnt/user-data/uploads/QandA_for_Panel.xlsx",
+         qa_answers=qa_answers,
+         total_boq=total_boq,
+         num_panels=3,
+     )
+     
+     # Step 4: Export to JSON
+     configurator.export_to_json("/home/claude/project_configurations.json")
+     
+     # Step 5: Get CP-SAT inputs
+     cpsat_inputs = configurator.get_cpsat_inputs()
+     
+     print("\n" + "="*80)
+     print("CP-SAT READY INPUTS")
+     print("="*80)
+-    for idx, (boq, constraints) in enumerate(cpsat_inputs, 1):
++    for idx, (boq, constraints, modules, categories) in enumerate(cpsat_inputs, 1):
+         print(f"\nPanel {idx}:")
+         print(f"  BOQ: {boq}")
+         print(f"  Constraints: {constraints}")
++        if modules:
++            print(f"  Module Selection: {modules}")
++        if categories:
++            print(f"  Category Requirements: {categories}")
+     
+     return configurations
+ 
+ 
+ if __name__ == "__main__":
+     main()
+ 
+EOF
+)
+
+
+
+
