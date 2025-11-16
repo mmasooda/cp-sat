@@ -15,13 +15,19 @@ Author: Fire Alarm System Configurator
 Date: 2024
 """
 
-import pandas as pd
-import openpyxl
 import json
-from typing import Dict, List, Tuple, Optional
+import math
 from dataclasses import dataclass, asdict
 from enum import Enum
-import math
+from typing import Dict, List, Tuple, Optional
+
+try:  # Optional dependency for richer Excel parsing
+    import pandas as pd
+except Exception:  # pragma: no cover - fallback to lightweight reader
+    pd = None  # type: ignore
+
+from excel_reader import XLSXReader
+from cp_sat_rule_engine import RuleEngine, OptimizationResult
 
 
 # ============================================================================
@@ -163,6 +169,12 @@ class PanelConfiguration:
     constraints: Dict
     is_main_panel: bool = True
     is_remote_annunciator: bool = False
+    optimized_modules: Optional[Dict[str, int]] = None
+    category_requirements: Optional[Dict[str, int]] = None
+    estimated_cost: float = 0.0
+    solver_status: Optional[str] = None
+    space_usage: Optional[Dict[str, float]] = None
+    bay_allocation: Optional[Dict[str, int]] = None
 
 
 # ============================================================================
@@ -192,12 +204,19 @@ class QandAProcessor:
     def _load_excel(self):
         """Load Q&A Excel file"""
         try:
-            # Read Excel file
+            if pd is None:
+                raise ImportError("pandas not available")
             self.df = pd.read_excel(self.excel_path, sheet_name='Sheet1')
             print(f"✓ Loaded Q&A Excel: {self.excel_path}")
             print(f"  Found {len(self.df)} questions")
-        except Exception as e:
-            raise ValueError(f"Failed to load Q&A Excel: {e}")
+        except Exception as exc:
+            reader = XLSXReader(self.excel_path)
+            sheet = reader.read_sheet()
+            row_count = max(0, len(sheet.rows) - 1)
+            self.df = None
+            print(f"✓ Loaded Q&A Excel (fallback parser): {self.excel_path}")
+            print(f"  Found {row_count} questions (shared strings parser)")
+            print(f"  pandas loader unavailable: {exc}")
     
     
     def process_answers(self, answers_dict: Dict[int, str]) -> ProjectAnswers:
@@ -658,6 +677,7 @@ class ProjectConfigurator:
         self.qa_processor: Optional[QandAProcessor] = None
         self.project_answers: Optional[ProjectAnswers] = None
         self.panel_configurations: List[PanelConfiguration] = []
+        self.rule_engine: Optional[RuleEngine] = None
     
     
     def process_project(
@@ -666,6 +686,9 @@ class ProjectConfigurator:
         qa_answers: Dict[int, str],
         total_boq: DeviceBOQ,
         num_panels: int = 1,
+        module_workbook_path: str = "4100ES_All_Modules_Complete MX rev2.xlsx",
+        placement_rules_path: str = "4100ES Overview of Placement Rules.xlsx",
+        pricing_overrides_path: Optional[str] = None,
     ) -> List[PanelConfiguration]:
         """
         Complete project processing workflow.
@@ -683,6 +706,15 @@ class ProjectConfigurator:
         print("PROJECT CONFIGURATION WORKFLOW")
         print("="*80 + "\n")
         
+        # Step 0: Load rule engine (ensures placement rules and catalog are parsed)
+        if self.rule_engine is None:
+            print("STEP 0: Loading rule repository...")
+            self.rule_engine = RuleEngine(
+                module_workbook=module_workbook_path,
+                placement_workbook=placement_rules_path,
+                pricing_overrides=pricing_overrides_path,
+            )
+
         # Step 1: Process Q&A
         print("STEP 1: Processing Q&A Excel...")
         self.qa_processor = QandAProcessor(qa_excel_path)
@@ -742,7 +774,34 @@ class ProjectConfigurator:
                 )
                 annunciator_config.panel_id = f"ANNUNCIATOR-{idx + 1}"
                 self.panel_configurations.append(annunciator_config)
-        
+
+        # Step 6: Run rule engine optimisation for each configuration
+        if self.rule_engine is not None:
+            print("\nSTEP 6: Deriving module requirements from rule engine...")
+            for config in self.panel_configurations:
+                try:
+                    result: OptimizationResult = self.rule_engine.optimise_panel(
+                        self.project_answers, config.boq
+                    )
+                    config.optimized_modules = result.module_selection
+                    config.category_requirements = result.category_requirements
+                    config.estimated_cost = result.estimated_cost
+                    config.solver_status = result.solver_status
+                    config.space_usage = result.space_usage
+                    config.bay_allocation = result.bay_allocation
+                    print(
+                        f"  → {config.panel_id}: {len(result.module_selection)} module families, "
+                        f"est. cost ${result.estimated_cost:,.2f} ({result.solver_status}); "
+                        f"space internal {result.space_usage['internal_blocks']:.1f} blocks / "
+                        f"door {result.space_usage['door_slots']:.1f} slots"
+                    )
+                except Exception as optimisation_error:
+                    print(
+                        f"  ⚠️  Rule engine failed for {config.panel_id}: {optimisation_error}"
+                    )
+        else:
+            print("\n⚠️  Rule engine unavailable; optimisation skipped")
+
         print("\n" + "="*80)
         print("✓ PROJECT CONFIGURATION COMPLETE")
         print(f"  Total configurations: {len(self.panel_configurations)}")
@@ -763,6 +822,12 @@ class ProjectConfigurator:
                 "is_remote_annunciator": config.is_remote_annunciator,
                 "boq": asdict(config.boq),
                 "constraints": config.constraints,
+                "category_requirements": config.category_requirements,
+                "optimized_modules": config.optimized_modules,
+                "estimated_cost": config.estimated_cost,
+                "solver_status": config.solver_status,
+                "space_usage": config.space_usage,
+                "bay_allocation": config.bay_allocation,
             }
             for config in self.panel_configurations
         ]
@@ -804,8 +869,15 @@ class ProjectConfigurator:
             # Remove zero quantities
             boq_dict = {k: v for k, v in boq_dict.items() if v > 0}
             
-            cpsat_inputs.append((boq_dict, config.constraints))
-        
+            cpsat_inputs.append(
+                (
+                    boq_dict,
+                    config.constraints,
+                    config.optimized_modules or {},
+                    config.category_requirements or {},
+                )
+            )
+
         return cpsat_inputs
 
 
@@ -861,10 +933,14 @@ def main():
     print("\n" + "="*80)
     print("CP-SAT READY INPUTS")
     print("="*80)
-    for idx, (boq, constraints) in enumerate(cpsat_inputs, 1):
+    for idx, (boq, constraints, modules, categories) in enumerate(cpsat_inputs, 1):
         print(f"\nPanel {idx}:")
         print(f"  BOQ: {boq}")
         print(f"  Constraints: {constraints}")
+        if modules:
+            print(f"  Module Selection: {modules}")
+        if categories:
+            print(f"  Category Requirements: {categories}")
     
     return configurations
 

@@ -115,16 +115,28 @@ Processing:
       - Create basic remote annunciator config
 Output: Additional PanelConfiguration objects
 
-STEP 7: EXPORT FOR CP-SAT
+STEP 7: EVALUATE RULE ENGINE & PRICE OPTIMISATION
+=================================================
+Input: ProjectAnswers, panel-level DeviceBOQ, Excel rule workbooks
+Processing:
+  → Load module catalogue from `4100ES_All_Modules_Complete MX rev2.xlsx`
+  → Parse placement constraints from `4100ES Overview of Placement Rules.xlsx`
+  → Derive category requirements (Master Controller, Power Supplies, Audio, etc.)
+    based on Q&A answers and BOQ quantities
+  → Build CP-SAT optimisation (if OR-Tools available) with price objective
+  → Fall back to greedy selection when solver not installed
+Output: Estimated cost, selected module counts, per-category requirements
+
+STEP 8: EXPORT FOR CP-SAT
 ==========================
 Input: All PanelConfiguration objects
 Processing:
   → Convert DeviceBOQ to dict
   → Format constraints
-  → Create (boq, constraints) tuples
-Output: [(boq1, constraints1), (boq2, constraints2), ...]
+  → Include optimisation metadata (category requirements, module selection)
+Output: [(boq1, constraints1, modules1, categories1), ...]
 
-STEP 8: RUN CP-SAT OPTIMIZER
+STEP 9: RUN CP-SAT OPTIMIZER
 ==============================
 Input: For each panel: (boq, constraints)
 Processing:
@@ -820,6 +832,10 @@ Usage: optimizer.optimize_configuration(boq_dict, constraints_dict)
 7. ✅ Format everything for CP-SAT
 8. ✅ Run CP-SAT optimizer for each panel
 9. ✅ Generate complete BOM and layout
+10. ✅ Report internal back-plane blocks vs. door-mounted slot usage for every optimised panel
+11. ✅ Auto-select matching 4100ES backboxes and solid/glass doors (plus amplifier redundancy) based on bay demand and door-mounted modules
+
+Each panel configuration exported to JSON now includes a `space_usage` block with the total internal blocks and door slots consumed by the recommended modules, along with a `bay_allocation` summary that highlights the minimum bays required to satisfy both planes. This mirrors the 4100ES placement guidelines and ensures that mixed modules such as audio microphone stations and firefighter telephones that span both planes are budgeted correctly.
 
 ### File Structure in Your Project
 
